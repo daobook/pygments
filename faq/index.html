@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Pygments FAQ &#8212; Pygments</title>
+    <title>Pygments 常见问题 &#8212; Pygments</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/pygments14.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -81,16 +81,16 @@
   <div>
     <h3><a href="../">目录</a></h3>
     <ul>
-<li><a class="reference internal" href="#">Pygments FAQ</a><ul>
-<li><a class="reference internal" href="#what-is-pygments">What is Pygments?</a></li>
-<li><a class="reference internal" href="#where-does-the-name-pygments-come-from">Where does the name Pygments come from?</a></li>
-<li><a class="reference internal" href="#what-are-the-system-requirements">What are the system requirements?</a></li>
-<li><a class="reference internal" href="#how-can-i-use-pygments">How can I use Pygments?</a></li>
-<li><a class="reference internal" href="#how-do-i-make-a-new-style">How do I make a new style?</a></li>
-<li><a class="reference internal" href="#how-can-i-report-a-bug-or-suggest-a-feature">How can I report a bug or suggest a feature?</a></li>
-<li><a class="reference internal" href="#i-want-this-support-for-this-language">I want this support for this language!</a></li>
-<li><a class="reference internal" href="#can-i-use-pygments-for-programming-language-processing">Can I use Pygments for programming language processing?</a></li>
-<li><a class="reference internal" href="#who-uses-pygments">Who uses Pygments?</a></li>
+<li><a class="reference internal" href="#">Pygments 常见问题</a><ul>
+<li><a class="reference internal" href="#what-is-pygments">Pygments 是什么？</a></li>
+<li><a class="reference internal" href="#where-does-the-name-pygments-come-from">Pygments 这个名字是怎么来的？</a></li>
+<li><a class="reference internal" href="#what-are-the-system-requirements">系统需求是什么？</a></li>
+<li><a class="reference internal" href="#how-can-i-use-pygments">我怎样才能使用Pygments？</a></li>
+<li><a class="reference internal" href="#how-do-i-make-a-new-style">我如何制作一个新的风格？</a></li>
+<li><a class="reference internal" href="#how-can-i-report-a-bug-or-suggest-a-feature">如何报告一个错误或建议一个功能？</a></li>
+<li><a class="reference internal" href="#i-want-this-support-for-this-language">我想要这种语言的支持!</a></li>
+<li><a class="reference internal" href="#can-i-use-pygments-for-programming-language-processing">我可以使用 Pygments 进行编程语言处理吗？</a></li>
+<li><a class="reference internal" href="#who-uses-pygments">谁在使用 Pygments？</a></li>
 </ul>
 </li>
 </ul>
@@ -122,77 +122,67 @@
           <div class="body" role="main">
             
   <section id="pygments-faq">
-<h1>Pygments FAQ<a class="headerlink" href="#pygments-faq" title="永久链接至标题">¶</a></h1>
+<h1>Pygments 常见问题<a class="headerlink" href="#pygments-faq" title="永久链接至标题">¶</a></h1>
 <section id="what-is-pygments">
-<h2>What is Pygments?<a class="headerlink" href="#what-is-pygments" title="永久链接至标题">¶</a></h2>
-<p>Pygments is a syntax highlighting engine written in Python. That means, it will
-take source code (or other markup) in a supported language and output a
-processed version (in different formats) containing syntax highlighting markup.</p>
-<p>Its features include:</p>
+<h2>Pygments 是什么？<a class="headerlink" href="#what-is-pygments" title="永久链接至标题">¶</a></h2>
+<p>Pygments 是一个用 Python 编写的语法高亮引擎。这意味着，它将接受支持的语言的源代码（或其他标记），并输出一个包含语法高亮标记的处理过的版本（不同的格式）。</p>
+<p>它的特点包括：</p>
 <ul class="simple">
-<li><p>a wide range of common <a class="reference internal" href="../languages/"><span class="doc">languages and markup formats</span></a> is supported</p></li>
-<li><p>new languages and formats are added easily</p></li>
-<li><p>a number of output formats is available, including:</p>
+<li><p>支持多种常见的 <a class="reference internal" href="../languages/"><span class="doc">语言和标记格式</span></a></p></li>
+<li><p>很容易添加新的语言和格式</p></li>
+<li><p>有多种输出格式可供选择，包括：</p>
 <ul>
 <li><p>HTML</p></li>
-<li><p>ANSI sequences (console output)</p></li>
+<li><p>ANSI 序列 （console 输出）</p></li>
 <li><p>LaTeX</p></li>
 <li><p>RTF</p></li>
 </ul>
 </li>
-<li><p>it is usable as a command-line tool and as a library</p></li>
-<li><p>parsing and formatting is fast</p></li>
+<li><p>它可以作为一个命令行工具和一个库使用</p></li>
+<li><p>解析和格式化的速度很快</p></li>
 </ul>
-<p>Pygments is licensed under the BSD license.</p>
+<p>Pygments 是在 BSD 许可证下授权的。</p>
 </section>
 <section id="where-does-the-name-pygments-come-from">
-<h2>Where does the name Pygments come from?<a class="headerlink" href="#where-does-the-name-pygments-come-from" title="永久链接至标题">¶</a></h2>
-<p><em>Py</em> of course stands for Python, while <em>pigments</em> are used for coloring paint,
-and in this case, source code!</p>
+<h2>Pygments 这个名字是怎么来的？<a class="headerlink" href="#where-does-the-name-pygments-come-from" title="永久链接至标题">¶</a></h2>
+<p><em>Py</em> 当然是指 Python，而 <em>pigments</em> 是用来给颜料上色的，在这里是指源代码！</p>
 </section>
 <section id="what-are-the-system-requirements">
-<h2>What are the system requirements?<a class="headerlink" href="#what-are-the-system-requirements" title="永久链接至标题">¶</a></h2>
-<p>Pygments only needs a standard Python install, version 2.7 or higher or version
-3.5 or higher for Python 3. No additional libraries are needed.</p>
+<h2>系统需求是什么？<a class="headerlink" href="#what-are-the-system-requirements" title="永久链接至标题">¶</a></h2>
+<p>Pygments 只需要安装一个标准的 Python，2.7 或更高的版本，或者 Python 3 的 3.5 版或更高版本。不需要额外的库。</p>
 </section>
 <section id="how-can-i-use-pygments">
-<h2>How can I use Pygments?<a class="headerlink" href="#how-can-i-use-pygments" title="永久链接至标题">¶</a></h2>
-<p>Pygments is usable as a command-line tool as well as a library.</p>
-<p>From the command-line, usage looks like this (assuming the pygmentize script is
-properly installed):</p>
+<h2>我怎样才能使用Pygments？<a class="headerlink" href="#how-can-i-use-pygments" title="永久链接至标题">¶</a></h2>
+<p>Pygments 可以作为一个命令行工具，也可以作为一个库使用。</p>
+<p>从命令行看，用法是这样的（假设 pygmentize 脚本已正确安装） ::”</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pygmentize</span> <span class="o">-</span><span class="n">f</span> <span class="n">html</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
-<p>This will print a HTML-highlighted version of /path/to/file.py to standard output.</p>
-<p>For a complete help, please run <code class="docutils literal notranslate"><span class="pre">pygmentize</span> <span class="pre">-h</span></code>.</p>
-<p>Usage as a library is thoroughly demonstrated in the Documentation section.</p>
+<p>这将把 /path/to/file.py 的 HTML 高亮版本打印到标准输出。</p>
+<p>要获得完整的帮助，请运行 <code class="docutils literal notranslate"><span class="pre">pygmentize</span> <span class="pre">-h</span></code>。</p>
+<p>作为一个库的用法在文档部分得到了彻底的展示。</p>
 </section>
 <section id="how-do-i-make-a-new-style">
-<h2>How do I make a new style?<a class="headerlink" href="#how-do-i-make-a-new-style" title="永久链接至标题">¶</a></h2>
-<p>Please see the <a class="reference internal" href="../docs/styles/"><span class="doc">documentation on styles</span></a>.</p>
+<h2>我如何制作一个新的风格？<a class="headerlink" href="#how-do-i-make-a-new-style" title="永久链接至标题">¶</a></h2>
+<p>请参阅 <a class="reference internal" href="../docs/styles/"><span class="doc">documentation on styles</span></a>。</p>
 </section>
 <section id="how-can-i-report-a-bug-or-suggest-a-feature">
-<h2>How can I report a bug or suggest a feature?<a class="headerlink" href="#how-can-i-report-a-bug-or-suggest-a-feature" title="永久链接至标题">¶</a></h2>
-<p>Please report bugs and feature wishes in the tracker at GitHub.</p>
-<p>You can also e-mail the authors, see the contact details.</p>
+<h2>如何报告一个错误或建议一个功能？<a class="headerlink" href="#how-can-i-report-a-bug-or-suggest-a-feature" title="永久链接至标题">¶</a></h2>
+<p>请在 GitHub 的跟踪器中报告错误和功能愿望。</p>
+<p>你也可以给作者发电子邮件，见联系方式。</p>
 </section>
 <section id="i-want-this-support-for-this-language">
-<h2>I want this support for this language!<a class="headerlink" href="#i-want-this-support-for-this-language" title="永久链接至标题">¶</a></h2>
-<p>Instead of waiting for others to include language support, why not write it
-yourself? All you have to know is <a class="reference internal" href="../docs/lexerdevelopment/"><span class="doc">outlined in the docs</span></a>.</p>
+<h2>我想要这种语言的支持!<a class="headerlink" href="#i-want-this-support-for-this-language" title="永久链接至标题">¶</a></h2>
+<p>与其等待别人加入语言支持，为什么不自己写呢？你所要知道的是 <a class="reference internal" href="../docs/lexerdevelopment/"><span class="doc">在 docs</span></a> 中列出的。</p>
 </section>
 <section id="can-i-use-pygments-for-programming-language-processing">
-<h2>Can I use Pygments for programming language processing?<a class="headerlink" href="#can-i-use-pygments-for-programming-language-processing" title="永久链接至标题">¶</a></h2>
-<p>The Pygments lexing machinery is quite powerful can be used to build lexers for
-basically all languages. However, parsing them is not possible, though some
-lexers go some steps in this direction in order to e.g. highlight function names
-differently.</p>
-<p>Also, error reporting is not the scope of Pygments. It focuses on correctly
-highlighting syntactically valid documents, not finding and compensating errors.</p>
+<h2>我可以使用 Pygments 进行编程语言处理吗？<a class="headerlink" href="#can-i-use-pygments-for-programming-language-processing" title="永久链接至标题">¶</a></h2>
+<p>Pygments 的词法机制相当强大，可以用来为基本上所有的语言建立词法器。然而，对它们进行解析是不可能的，尽管有些词法在这个方向上采取了一些措施，以便例如以不同的方式突出显示函数名称。</p>
+<p>另外，错误报告不是 Pygments 的范围。它的重点是正确地突出语法上有效的文件，而不是发现和弥补错误”</p>
 </section>
 <section id="who-uses-pygments">
-<h2>Who uses Pygments?<a class="headerlink" href="#who-uses-pygments" title="永久链接至标题">¶</a></h2>
-<p>This is an (incomplete) list of projects and sites known to use the Pygments highlighter.</p>
+<h2>谁在使用 Pygments？<a class="headerlink" href="#who-uses-pygments" title="永久链接至标题">¶</a></h2>
+<p>这是一个（不完整的）已知使用 Pygments 高亮的项目和网站的列表。</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://en.wikipedia.org/">Wikipedia</a></p></li>
 <li><p><a class="reference external" href="https://bitbucket.org/">BitBucket</a>, a Mercurial and Git hosting site</p></li>
@@ -242,7 +232,7 @@ Environment, uses pygments for the multi-language syntax highlighting in its
 <li><p><a class="reference external" href="https://snippet.host">snippet.host</a>, minimal text and code snippet hosting</p></li>
 <li><p><a class="reference external" href="https://sourcehut.org">sourcehut</a>, the hacker’s forge</p></li>
 </ul>
-<p>If you have a project or web site using Pygments, <a class="reference external" href="https://github.com/pygments/pygments">open an issue or PR</a> and we’ll add a line here.</p>
+<p>如果你有一个使用 Pygments 的项目或网站，<a class="reference external" href="https://github.com/pygments/pygments">打开一个问题或 PR</a>，我们将在这里添加一行。</p>
 </section>
 </section>
 
