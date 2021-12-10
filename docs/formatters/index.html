@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Available formatters &#8212; Pygments</title>
+    <title>可用的格式化器 &#8212; Pygments</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/pygments14.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -17,8 +17,8 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="索引" href="../../genindex/" />
     <link rel="search" title="搜索" href="../../search/" />
-    <link rel="next" title="Styles" href="../styles/" />
-    <link rel="prev" title="Filters" href="../filters/" />
+    <link rel="next" title="风格" href="../styles/" />
+    <link rel="prev" title="过滤器" href="../filters/" />
     <link href='https://fonts.googleapis.com/css?family=PT+Sans:300,400,700'
           rel='stylesheet' type='text/css'>
  
@@ -83,9 +83,9 @@
   <div>
     <h3><a href="../../">目录</a></h3>
     <ul>
-<li><a class="reference internal" href="#">Available formatters</a><ul>
-<li><a class="reference internal" href="#common-options">Common options</a></li>
-<li><a class="reference internal" href="#formatter-classes">Formatter classes</a></li>
+<li><a class="reference internal" href="#">可用的格式化器</a><ul>
+<li><a class="reference internal" href="#common-options">通用选项</a></li>
+<li><a class="reference internal" href="#formatter-classes">格式化器类</a></li>
 </ul>
 </li>
 </ul>
@@ -94,12 +94,12 @@
 <div>
   <h4>上一个主题</h4>
   <p class="topless"><a href="../filters/"
-                        title="上一章">Filters</a></p>
+                        title="上一章">过滤器</a></p>
 </div>
 <div>
   <h4>下一个主题</h4>
   <p class="topless"><a href="../styles/"
-                        title="下一章">Styles</a></p>
+                        title="下一章">风格</a></p>
 </div>
   <div role="note" aria-label="source link">
     <h3>本页</h3>
@@ -127,35 +127,19 @@
           <div class="body" role="main">
             
   <section id="available-formatters">
-<h1>Available formatters<a class="headerlink" href="#available-formatters" title="永久链接至标题">¶</a></h1>
-<p>This page lists all builtin formatters.</p>
+<h1>可用的格式化器<a class="headerlink" href="#available-formatters" title="永久链接至标题">¶</a></h1>
+<p>本页列出了所有的内置格式化器。</p>
 <section id="common-options">
-<h2>Common options<a class="headerlink" href="#common-options" title="永久链接至标题">¶</a></h2>
-<p>All formatters support these options:</p>
+<h2>通用选项<a class="headerlink" href="#common-options" title="永久链接至标题">¶</a></h2>
+<p>所有格式化器都支持这些选项：</p>
 <dl>
-<dt><cite>encoding</cite></dt><dd><p>If given, must be an encoding name (such as <code class="docutils literal notranslate"><span class="pre">&quot;utf-8&quot;</span></code>). This will
-be used to convert the token strings (which are Unicode strings)
-to byte strings in the output (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>).
-It will also be written in an encoding declaration suitable for the
-document format if the <cite>full</cite> option is given (e.g. a <code class="docutils literal notranslate"><span class="pre">meta</span>
-<span class="pre">content-type</span></code> directive in HTML or an invocation of the <cite>inputenc</cite>
-package in LaTeX).</p>
-<p>If this is <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">None</span></code>, Unicode strings will be written
-to the output file, which most file-like objects do not support.
-For example, <cite>pygments.highlight()</cite> will return a Unicode string if
-called with no <cite>outfile</cite> argument and a formatter that has <cite>encoding</cite>
-set to <code class="docutils literal notranslate"><span class="pre">None</span></code> because it uses a <cite>StringIO.StringIO</cite> object that
-supports Unicode arguments to <cite>write()</cite>. Using a regular file object
-wouldn’t work.</p>
+<dt><cite>encoding</cite></dt><dd><p>如果给定，必须是一个编码名称（如 <code class="docutils literal notranslate"><span class="pre">&quot;utf-8&quot;</span></code>）。这将用于在输出中把标记字符串（Unicode 字符串）转换成字节字符串（默认： <code class="docutils literal notranslate"><span class="pre">None</span></code>）。如果给了 <code class="docutils literal notranslate"><span class="pre">full</span></code> 选项，它也将被写入适合文档格式的编码声明中（例如，HTML 中的 <code class="docutils literal notranslate"><span class="pre">meta</span> <span class="pre">content-type</span></code> 指令或 LaTeX 中调用 <code class="docutils literal notranslate"><span class="pre">inputenc</span></code> 包）。</p>
+<p>如果这是 <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> 或 <code class="docutils literal notranslate"><span class="pre">None</span></code>，Unicode 字符串将被写入输出文件，大多数类文件对象都不支持。例如，如果调用 <code class="docutils literal notranslate"><span class="pre">pygments.highlight()</span></code> 时没有 <code class="docutils literal notranslate"><span class="pre">outfile</span></code> 参数，并且格式化器的 <code class="docutils literal notranslate"><span class="pre">encoding</span></code> 设置为 <code class="docutils literal notranslate"><span class="pre">None</span></code>，将返回一个Unicode字符串，因为它使用一个 <code class="docutils literal notranslate"><span class="pre">StringIO.StringIO</span></code> 对象，支持 Unicode 参数给 <code class="docutils literal notranslate"><span class="pre">write()</span></code>。使用一个普通的文件对象是不行的。</p>
 <div class="versionadded">
 <p><span class="versionmodified added">0.6 新版功能.</span></p>
 </div>
 </dd>
-<dt><cite>outencoding</cite></dt><dd><p>When using Pygments from the command line, any <cite>encoding</cite> option given is
-passed to the lexer and the formatter. This is sometimes not desirable,
-for example if you want to set the input encoding to <code class="docutils literal notranslate"><span class="pre">&quot;guess&quot;</span></code>.
-Therefore, <cite>outencoding</cite> has been introduced which overrides <cite>encoding</cite>
-for the formatter if given.</p>
+<dt><cite>outencoding</cite></dt><dd><p>当从命令行使用 Pygments 时，任何 <cite>encoding</cite> 选项都会传递给 lexer 和格式化器。这有时是不可取的，例如，如果你想把输入编码设置为 <code class="docutils literal notranslate"><span class="pre">&quot;guess&quot;</span></code>。因此，引入了 <code class="docutils literal notranslate"><span class="pre">outencoding</span></code>，如果给出的话，它将覆盖格式化器的 <code class="docutils literal notranslate"><span class="pre">encoding</span></code>。</p>
 <div class="versionadded">
 <p><span class="versionmodified added">0.7 新版功能.</span></p>
 </div>
@@ -163,16 +147,16 @@ for the formatter if given.</p>
 </dl>
 </section>
 <section id="formatter-classes">
-<h2>Formatter classes<a class="headerlink" href="#formatter-classes" title="永久链接至标题">¶</a></h2>
-<p>All these classes are importable from <a class="reference internal" href="../api/#module-pygments.formatters" title="pygments.formatters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygments.formatters</span></code></a>.</p>
+<h2>格式化器类<a class="headerlink" href="#formatter-classes" title="永久链接至标题">¶</a></h2>
+<p>所有这些类都可以从 <a class="reference internal" href="../api/#module-pygments.formatters" title="pygments.formatters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygments.formatters</span></code></a> 导入。</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="BBCodeFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BBCodeFormatter</span></span><a class="headerlink" href="#BBCodeFormatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>bbcode, bb</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -204,10 +188,10 @@ need for indentation) are removed.</p>
 <dt class="sig sig-object py" id="BmpImageFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BmpImageFormatter</span></span><a class="headerlink" href="#BmpImageFormatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>bmp, bitmap</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>*.bmp</p>
 </dd>
 </dl>
@@ -222,10 +206,10 @@ generate a pixmap from the source code.</p>
 <dt class="sig sig-object py" id="GifImageFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GifImageFormatter</span></span><a class="headerlink" href="#GifImageFormatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>gif</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>*.gif</p>
 </dd>
 </dl>
@@ -240,10 +224,10 @@ generate a pixmap from the source code.</p>
 <dt class="sig sig-object py" id="GroffFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GroffFormatter</span></span><a class="headerlink" href="#GroffFormatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>groff, troff, roff</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -270,10 +254,10 @@ generate a pixmap from the source code.</p>
 <dt class="sig sig-object py" id="HtmlFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HtmlFormatter</span></span><a class="headerlink" href="#HtmlFormatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>html</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>*.html, *.htm</p>
 </dd>
 </dl>
@@ -531,10 +515,10 @@ HTML yielded by the wrapped generator is output.</p>
 <dt class="sig sig-object py" id="IRCFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IRCFormatter</span></span><a class="headerlink" href="#IRCFormatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>irc, IRC</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -559,10 +543,10 @@ no support for common styles.</p>
 <dt class="sig sig-object py" id="ImageFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ImageFormatter</span></span><a class="headerlink" href="#ImageFormatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>img, IMG, png</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>*.png</p>
 </dd>
 </dl>
@@ -651,10 +635,10 @@ the source code area.</p>
 <dt class="sig sig-object py" id="JpgImageFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">JpgImageFormatter</span></span><a class="headerlink" href="#JpgImageFormatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>jpg, jpeg</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>*.jpg</p>
 </dd>
 </dl>
@@ -669,10 +653,10 @@ generate a pixmap from the source code.</p>
 <dt class="sig sig-object py" id="LatexFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LatexFormatter</span></span><a class="headerlink" href="#LatexFormatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>latex, tex</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>*.tex</p>
 </dd>
 </dl>
@@ -765,10 +749,10 @@ The alternate environment still has to support Verbatim’s option syntax.
 <dt class="sig sig-object py" id="NullFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NullFormatter</span></span><a class="headerlink" href="#NullFormatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>text, null</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>*.txt</p>
 </dd>
 </dl>
@@ -779,10 +763,10 @@ The alternate environment still has to support Verbatim’s option syntax.
 <dt class="sig sig-object py" id="PangoMarkupFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PangoMarkupFormatter</span></span><a class="headerlink" href="#PangoMarkupFormatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>pango, pangomarkup</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -796,10 +780,10 @@ The alternate environment still has to support Verbatim’s option syntax.
 <dt class="sig sig-object py" id="RawTokenFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RawTokenFormatter</span></span><a class="headerlink" href="#RawTokenFormatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>raw, tokens</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>*.raw</p>
 </dd>
 </dl>
@@ -825,10 +809,10 @@ set but with no value, defaults to <code class="docutils literal notranslate"><s
 <dt class="sig sig-object py" id="RtfFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RtfFormatter</span></span><a class="headerlink" href="#RtfFormatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>rtf</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>*.rtf</p>
 </dd>
 </dl>
@@ -862,10 +846,10 @@ default is 24 half-points, giving a size 12 font.</p>
 <dt class="sig sig-object py" id="SvgFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SvgFormatter</span></span><a class="headerlink" href="#SvgFormatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>svg</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>*.svg</p>
 </dd>
 </dl>
@@ -922,10 +906,10 @@ and defaults to <code class="docutils literal notranslate"><span class="pre">Tru
 <dt class="sig sig-object py" id="Terminal256Formatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Terminal256Formatter</span></span><a class="headerlink" href="#Terminal256Formatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>terminal256, console256, 256</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -941,7 +925,7 @@ underline attributes from the style are preserved (and displayed).</p>
 <div class="versionchanged">
 <p><span class="versionmodified changed">在 2.2 版更改: </span>If the used style defines foreground colors in the form <code class="docutils literal notranslate"><span class="pre">#ansi*</span></code>, then
 <cite>Terminal256Formatter</cite> will map these to non extended foreground color.
-See <a class="reference internal" href="../styles/#ansiterminalstyle"><span class="std std-ref">Terminal Styles</span></a> for more information.</p>
+See <a class="reference internal" href="../styles/#ansiterminalstyle"><span class="std std-ref">终端样式</span></a> for more information.</p>
 </div>
 <div class="versionchanged">
 <p><span class="versionmodified changed">在 2.4 版更改: </span>The ANSI color names have been updated with names that are easier to
@@ -963,10 +947,10 @@ See <a class="reference internal" href="../styles/#new-ansi-color-names"><span c
 <dt class="sig sig-object py" id="TerminalFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TerminalFormatter</span></span><a class="headerlink" href="#TerminalFormatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>terminal, console</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -993,10 +977,10 @@ no support for common styles.</p>
 <dt class="sig sig-object py" id="TerminalTrueColorFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TerminalTrueColorFormatter</span></span><a class="headerlink" href="#TerminalTrueColorFormatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>terminal16m, console16m, 16m</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
@@ -1018,10 +1002,10 @@ are terminated at newlines, so that paging the output works correctly.</p>
 <dt class="sig sig-object py" id="TestcaseFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TestcaseFormatter</span></span><a class="headerlink" href="#TestcaseFormatter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Short names</dt>
+<dt class="field-odd">短名称</dt>
 <dd class="field-odd"><p>testcase</p>
 </dd>
-<dt class="field-even">Filenames</dt>
+<dt class="field-even">文件名</dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>

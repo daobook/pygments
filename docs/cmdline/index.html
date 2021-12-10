@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Command Line Interface &#8212; Pygments</title>
+    <title>命令行界面 &#8212; Pygments</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/pygments14.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -17,8 +17,8 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="索引" href="../../genindex/" />
     <link rel="search" title="搜索" href="../../search/" />
-    <link rel="next" title="Available lexers" href="../lexers/" />
-    <link rel="prev" title="Introduction and Quickstart" href="../quickstart/" />
+    <link rel="next" title="可用的词库" href="../lexers/" />
+    <link rel="prev" title="简介和快速入门" href="../quickstart/" />
     <link href='https://fonts.googleapis.com/css?family=PT+Sans:300,400,700'
           rel='stylesheet' type='text/css'>
  
@@ -83,15 +83,15 @@
   <div>
     <h3><a href="../../">目录</a></h3>
     <ul>
-<li><a class="reference internal" href="#">Command Line Interface</a><ul>
-<li><a class="reference internal" href="#options-and-filters">Options and filters</a></li>
-<li><a class="reference internal" href="#generating-styles">Generating styles</a></li>
-<li><a class="reference internal" href="#getting-lexer-names">Getting lexer names</a></li>
-<li><a class="reference internal" href="#guessing-the-lexer-from-the-file-contents">Guessing the lexer from the file contents</a></li>
-<li><a class="reference internal" href="#highlighting-stdin-until-eof">Highlighting stdin until EOF</a></li>
-<li><a class="reference internal" href="#custom-lexers-and-formatters">Custom Lexers and Formatters</a></li>
-<li><a class="reference internal" href="#getting-help">Getting help</a></li>
-<li><a class="reference internal" href="#a-note-on-encodings">A note on encodings</a></li>
+<li><a class="reference internal" href="#">命令行界面</a><ul>
+<li><a class="reference internal" href="#options-and-filters">选项和过滤器</a></li>
+<li><a class="reference internal" href="#generating-styles">生成样式</a></li>
+<li><a class="reference internal" href="#getting-lexer-names">获取词库名称</a></li>
+<li><a class="reference internal" href="#guessing-the-lexer-from-the-file-contents">从文件内容猜测 lexer</a></li>
+<li><a class="reference internal" href="#highlighting-stdin-until-eof">高亮显示 stdin 直到 EOF</a></li>
+<li><a class="reference internal" href="#custom-lexers-and-formatters">自定义 Lexer 和 Formatter</a></li>
+<li><a class="reference internal" href="#getting-help">获得帮助</a></li>
+<li><a class="reference internal" href="#a-note-on-encodings">关于编码的说明</a></li>
 </ul>
 </li>
 </ul>
@@ -100,12 +100,12 @@
 <div>
   <h4>上一个主题</h4>
   <p class="topless"><a href="../quickstart/"
-                        title="上一章">Introduction and Quickstart</a></p>
+                        title="上一章">简介和快速入门</a></p>
 </div>
 <div>
   <h4>下一个主题</h4>
   <p class="topless"><a href="../lexers/"
-                        title="下一章">Available lexers</a></p>
+                        title="下一章">可用的词库</a></p>
 </div>
   <div role="note" aria-label="source link">
     <h3>本页</h3>
@@ -133,182 +133,132 @@
           <div class="body" role="main">
             
   <section id="command-line-interface">
-<h1>Command Line Interface<a class="headerlink" href="#command-line-interface" title="永久链接至标题">¶</a></h1>
-<p>You can use Pygments from the shell, provided you installed the
-<strong class="program">pygmentize</strong> script:</p>
+<h1>命令行界面<a class="headerlink" href="#command-line-interface" title="永久链接至标题">¶</a></h1>
+<p>你可以从 shell 中使用 Pygments，只要你安装了 <strong class="program">pygmentize</strong> 脚本</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pygmentize test.py
 print &quot;Hello World&quot;
 </pre></div>
 </div>
-<p>will print the file test.py to standard output, using the Python lexer
-(inferred from the file name extension) and the terminal formatter (because
-you didn’t give an explicit formatter name).</p>
-<p>If you want HTML output:</p>
+<p>将使用 Python lexer（从文件名扩展名推断）和终端格式化器（因为你没有给出明确的格式化器名称），把文件 test.py 打印到标准输出。</p>
+<p>如果你想要HTML输出</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pygmentize -f html -l python -o test.html test.py
 </pre></div>
 </div>
-<p>As you can see, the -l option explicitly selects a lexer. As seen above, if you
-give an input file name and it has an extension that Pygments recognizes, you can
-omit this option.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">-o</span></code> option gives an output file name. If it is not given, output is
-written to stdout.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">-f</span></code> option selects a formatter (as with <code class="docutils literal notranslate"><span class="pre">-l</span></code>, it can also be omitted
-if an output file name is given and has a supported extension).
-If no output file name is given and <code class="docutils literal notranslate"><span class="pre">-f</span></code> is omitted, the
-<a class="reference internal" href="../formatters/#TerminalFormatter" title="TerminalFormatter"><code class="xref py py-class docutils literal notranslate"><span class="pre">TerminalFormatter</span></code></a> is used.</p>
-<p>The above command could therefore also be given as:</p>
+<p>正如你所看到的，<code class="docutils literal notranslate"><span class="pre">-l</span></code> 选项明确地选择了一个分析器。如上所述，如果你给了一个输入文件名，并且它有一个 Pygments 识别的扩展名，你可以省略这个选项。</p>
+<p><code class="docutils literal notranslate"><span class="pre">-o</span></code> 选项给出了一个输出文件名。如果没有给出，输出将写到 stdout。</p>
+<p><code class="docutils literal notranslate"><span class="pre">-f</span></code> 选项选择一个格式化的文件（和 <code class="docutils literal notranslate"><span class="pre">-l</span></code> 一样，如果给出了一个输出文件名并且有一个支持的扩展名，也可以省略）。如果没有给出输出文件名，并且省略了 <code class="docutils literal notranslate"><span class="pre">-f</span></code>，则使用 <a class="reference internal" href="../formatters/#TerminalFormatter" title="TerminalFormatter"><code class="xref py py-class docutils literal notranslate"><span class="pre">TerminalFormatter</span></code></a>。</p>
+<p>因此，上述命令也可以给出为</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pygmentize -o test.html test.py
 </pre></div>
 </div>
-<p>To create a full HTML document, including line numbers and stylesheet (using the
-“emacs” style), highlighting the Python file <code class="docutils literal notranslate"><span class="pre">test.py</span></code> to <code class="docutils literal notranslate"><span class="pre">test.html</span></code>:</p>
+<p>要创建一个完整的 HTML 文档，包括行号和样式表（使用 “emacs” 样式），将 Python 文件 <code class="docutils literal notranslate"><span class="pre">test.py</span></code> 高亮到 <code class="docutils literal notranslate"><span class="pre">test.html</span></code></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pygmentize -O full,style=emacs,linenos=1 -o test.html test.py
 </pre></div>
 </div>
 <section id="options-and-filters">
-<h2>Options and filters<a class="headerlink" href="#options-and-filters" title="永久链接至标题">¶</a></h2>
-<p>Lexer and formatter options can be given using the <code class="docutils literal notranslate"><span class="pre">-O</span></code> option:</p>
+<h2>选项和过滤器<a class="headerlink" href="#options-and-filters" title="永久链接至标题">¶</a></h2>
+<p>Lexer 和 formatter 选项可以使用 <code class="docutils literal notranslate"><span class="pre">-O</span></code> 选项给出</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pygmentize -f html -O style=colorful,linenos=1 -l python test.py
 </pre></div>
 </div>
-<p>Be sure to enclose the option string in quotes if it contains any special shell
-characters, such as spaces or expansion wildcards like <code class="docutils literal notranslate"><span class="pre">*</span></code>. If an option
-expects a list value, separate the list entries with spaces (you’ll have to
-quote the option value in this case too, so that the shell doesn’t split it).</p>
-<p>Since the <code class="docutils literal notranslate"><span class="pre">-O</span></code> option argument is split at commas and expects the split values
-to be of the form <code class="docutils literal notranslate"><span class="pre">name=value</span></code>, you can’t give an option value that contains
-commas or equals signs.  Therefore, an option <code class="docutils literal notranslate"><span class="pre">-P</span></code> is provided (as of Pygments
-0.9) that works like <code class="docutils literal notranslate"><span class="pre">-O</span></code> but can only pass one option per <code class="docutils literal notranslate"><span class="pre">-P</span></code>. Its value
-can then contain all characters:</p>
+<p>如果选项字符串包含任何特殊的 shell 字符，如空格或扩展通配符（如 <code class="docutils literal notranslate"><span class="pre">*</span></code>），请务必用引号将其括起来。如果一个选项需要一个列表值，请用空格隔开列表项（在这种情况下，你也必须给选项值加引号，这样 shell 就不会分割它）。</p>
+<p>由于 <code class="docutils literal notranslate"><span class="pre">-O</span></code> 选项参数在逗号处被分割，并期望分割后的值为 <code class="docutils literal notranslate"><span class="pre">name=value</span></code> 的形式，你不能给出一个包含逗号或等号的选项值。因此，提供了一个选项 <code class="docutils literal notranslate"><span class="pre">-P</span></code> （从 Pygments 0.9 开始），其工作原理与 <code class="docutils literal notranslate"><span class="pre">-O</span></code> 类似，但每个 <code class="docutils literal notranslate"><span class="pre">-P</span></code> 只能传递一个选项。它的值可以包含所有字符</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pygmentize -P &quot;heading=Pygments, the Python highlighter&quot; ...
 </pre></div>
 </div>
-<p>Filters are added to the token stream using the <code class="docutils literal notranslate"><span class="pre">-F</span></code> option:</p>
+<p>过滤器是使用 <code class="docutils literal notranslate"><span class="pre">-F</span></code> 选项添加到形符流的</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pygmentize -f html -l pascal -F keywordcase:case=upper main.pas
 </pre></div>
 </div>
-<p>As you see, options for the filter are given after a colon. As for <code class="docutils literal notranslate"><span class="pre">-O</span></code>, the
-filter name and options must be one shell word, so there may not be any spaces
-around the colon.</p>
+<p>正如你所看到的，过滤器的选项是在冒号后面给出的。至于 <code class="docutils literal notranslate"><span class="pre">-O</span></code>，过滤器的名称和选项必须是一个 shell 字，所以冒号周围不能有任何空格。</p>
 </section>
 <section id="generating-styles">
-<h2>Generating styles<a class="headerlink" href="#generating-styles" title="永久链接至标题">¶</a></h2>
-<p>Formatters normally don’t output full style information.  For example, the HTML
-formatter by default only outputs <code class="docutils literal notranslate"><span class="pre">&lt;span&gt;</span></code> tags with <code class="docutils literal notranslate"><span class="pre">class</span></code> attributes.
-Therefore, there’s a special <code class="docutils literal notranslate"><span class="pre">-S</span></code> option for generating style definitions.
-Usage is as follows:</p>
+<h2>生成样式<a class="headerlink" href="#generating-styles" title="永久链接至标题">¶</a></h2>
+<p>格式化器通常不输出完整的样式信息。例如，HTML 格式化器默认只输出 <code class="docutils literal notranslate"><span class="pre">&lt;span&gt;</span></code> 标签和 <code class="docutils literal notranslate"><span class="pre">class</span></code> 属性。因此，有一个特殊的 <code class="docutils literal notranslate"><span class="pre">-S</span></code> 选项用于生成样式定义。使用方法如下</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pygmentize -f html -S colorful -a .syntax
 </pre></div>
 </div>
-<p>generates a CSS style sheet (because you selected the HTML formatter) for
-the “colorful” style prepending a “.syntax” selector to all style rules.</p>
-<p>For an explanation what <code class="docutils literal notranslate"><span class="pre">-a</span></code> means for <a class="reference internal" href="../formatters/"><span class="doc">a particular formatter</span></a>, look for the <cite>arg</cite> argument for the formatter’s
-<a class="reference internal" href="../api/#pygments.formatter.Formatter.get_style_defs" title="pygments.formatter.Formatter.get_style_defs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_style_defs()</span></code></a> method.</p>
+<p>生成一个 CSS 样式表（因为你选择了 HTML 格式），为 “colorful” 样式预置一个 “.syntax” 选择器到所有样式规则。</p>
+<p>要解释 <code class="docutils literal notranslate"><span class="pre">-a</span></code> 对 <a class="reference internal" href="../formatters/"><span class="doc">一个特定的格式化器</span></a> 的含义，请寻找格式化器的 <a class="reference internal" href="../api/#pygments.formatter.Formatter.get_style_defs" title="pygments.formatter.Formatter.get_style_defs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_style_defs()</span></code></a> 方法的 <cite>arg</cite> 参数。</p>
 </section>
 <section id="getting-lexer-names">
-<h2>Getting lexer names<a class="headerlink" href="#getting-lexer-names" title="永久链接至标题">¶</a></h2>
+<h2>获取词库名称<a class="headerlink" href="#getting-lexer-names" title="永久链接至标题">¶</a></h2>
 <div class="versionadded">
 <p><span class="versionmodified added">1.0 新版功能.</span></p>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">-N</span></code> option guesses a lexer name for a given filename, so that</p>
+<p><code class="docutils literal notranslate"><span class="pre">-N</span></code> 选项为给定的文件名猜测一个词库名称，以便</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pygmentize -N setup.py
 </pre></div>
 </div>
-<p>will print out <code class="docutils literal notranslate"><span class="pre">python</span></code>.  It won’t highlight anything yet.  If no specific
-lexer is known for that filename, <code class="docutils literal notranslate"><span class="pre">text</span></code> is printed.</p>
-<p>Additionally, there is the <code class="docutils literal notranslate"><span class="pre">-C</span></code> option, which is just like like <code class="docutils literal notranslate"><span class="pre">-N</span></code>, except
-that it prints out a lexer name based solely on a given content from standard
-input.</p>
+<p>将打印出 <code class="docutils literal notranslate"><span class="pre">python</span></code>。它还不会高亮显示任何东西。如果该文件名没有特定的词法，则打印 <code class="docutils literal notranslate"><span class="pre">text</span></code>。</p>
+<p>此外，还有 <code class="docutils literal notranslate"><span class="pre">-C</span></code> 选项，它就像 <code class="docutils literal notranslate"><span class="pre">-N</span></code> 一样，只是它只根据标准输入的给定内容打印出一个词库名称。</p>
 </section>
 <section id="guessing-the-lexer-from-the-file-contents">
-<h2>Guessing the lexer from the file contents<a class="headerlink" href="#guessing-the-lexer-from-the-file-contents" title="永久链接至标题">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">-g</span></code> option will try to guess the correct lexer from the file contents,
-or pass through as plain text if nothing can be guessed. This option also looks
-for Vim modelines in the text, and for <em>some</em> languages, shebangs. Usage is as
-follows:</p>
+<h2>从文件内容猜测 lexer<a class="headerlink" href="#guessing-the-lexer-from-the-file-contents" title="永久链接至标题">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">-g</span></code> 选项将尝试从文件内容中猜测正确的词法，如果无法猜测，则以纯文本形式通过。这个选项也会在文本中寻找 Vim 的模式，对于 <em>某些</em> 语言，还会寻找 shebangs。使用方法如下</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pygmentize -g setup.py
 </pre></div>
 </div>
-<p>Note though, that this option is not very relaiable, and probably should be
-used only if Pygments is not able to guess the correct lexer from the file’s
-extension.</p>
+<p>但是请注意，这个选项不是很可靠，可能只有在 Pygments 无法从文件的扩展名中猜出正确的词法时才会使用。</p>
 </section>
 <section id="highlighting-stdin-until-eof">
-<h2>Highlighting stdin until EOF<a class="headerlink" href="#highlighting-stdin-until-eof" title="永久链接至标题">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">-s</span></code> option processes lines one at a time until EOF, rather than waiting
-to process the entire file. This only works for stdin, only for lexers with no
-line-spanning constructs, and is intended for streaming input such as you get
-from <cite>tail -f</cite>. Usage is as follows:</p>
+<h2>高亮显示 stdin 直到 EOF<a class="headerlink" href="#highlighting-stdin-until-eof" title="永久链接至标题">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">-s</span></code> 选项一次处理一行，直到 EOF，而不是等待处理整个文件。这只适用于 stdin，只适用于没有跨行结构的 lexer，并且用于流式输入，如你从 <cite>tail -f</cite> 得到的输入。使用方法如下</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ tail -f sql.log | pygmentize -s -l sql
 </pre></div>
 </div>
 </section>
 <section id="custom-lexers-and-formatters">
-<h2>Custom Lexers and Formatters<a class="headerlink" href="#custom-lexers-and-formatters" title="永久链接至标题">¶</a></h2>
+<h2>自定义 Lexer 和 Formatter<a class="headerlink" href="#custom-lexers-and-formatters" title="永久链接至标题">¶</a></h2>
 <div class="versionadded">
 <p><span class="versionmodified added">2.2 新版功能.</span></p>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">-x</span></code> flag enables custom lexers and formatters to be loaded
-from files relative to the current directory. Create a file with a class named
-CustomLexer or CustomFormatter, then specify it on the command line:</p>
+<p><code class="docutils literal notranslate"><span class="pre">-x</span></code> 标志使自定义 lexer 和 formatter 可以从相对于当前目录的文件中加载。用名为 CustomLexer 或 CustomFormatter 的类创建一个文件，然后在命令行中指定它</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pygmentize -l your_lexer.py -f your_formatter.py -x
 </pre></div>
 </div>
-<p>You can also specify the name of your class with a colon:</p>
+<p>你也可以用冒号来指定你的类的名称</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pygmentize -l your_lexer.py:SomeLexer -x
 </pre></div>
 </div>
-<p>For more information, see <a class="reference internal" href="../lexerdevelopment/"><span class="doc">the Pygments documentation on Lexer development</span></a>.</p>
+<p>更多信息，请参阅 <a class="reference internal" href="../lexerdevelopment/"><span class="doc">Pygments 关于 Lexer 开发的文档</span></a>。</p>
 </section>
 <section id="getting-help">
-<h2>Getting help<a class="headerlink" href="#getting-help" title="永久链接至标题">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">-L</span></code> option lists lexers, formatters, along with their short
-names and supported file name extensions, styles and filters. If you want to see
-only one category, give it as an argument:</p>
+<h2>获得帮助<a class="headerlink" href="#getting-help" title="永久链接至标题">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">-L</span></code> 选项列出了 lexer、formatter，以及它们的短名称和支持的文件名扩展名、样式和过滤器。如果你想只看到一个类别，请给它一个参数</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pygmentize -L filters
 </pre></div>
 </div>
-<p>will list only all installed filters.</p>
+<p>将只列出所有已安装的过滤器。</p>
 <div class="versionadded">
 <p><span class="versionmodified added">2.11 新版功能.</span></p>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">--json</span></code> option can be used in conjunction with the <code class="docutils literal notranslate"><span class="pre">-L</span></code> option to
-output it’s contents as JSON. Thus, to print all the installed styles and their
-description in JSON, use the command:</p>
+<p><code class="docutils literal notranslate"><span class="pre">--json</span></code> 选项可以和 <code class="docutils literal notranslate"><span class="pre">-L</span></code> 选项一起使用，将其内容输出为 JSON。因此，如果要以 JSON 格式打印所有已安装的样式和它们的描述，请使用以下命令</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pygmentize -L styles --json
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">-H</span></code> option will give you detailed information (the same that can be found
-in this documentation) about a lexer, formatter or filter. Usage is as follows:</p>
+<p><code class="docutils literal notranslate"><span class="pre">-H</span></code> 选项将给你提供关于一个 lexer、formatter 或 filter 的详细信息（与本文档中可以找到的信息相同）。使用方法如下</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pygmentize -H formatter html
 </pre></div>
 </div>
-<p>will print the help for the HTML formatter, while</p>
+<p>将打印 HTML 格式化器的帮助，而</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pygmentize -H lexer python
 </pre></div>
 </div>
-<p>will print the help for the Python lexer, etc.</p>
+<p>将打印 Python lexer 的帮助，等等。</p>
 </section>
 <section id="a-note-on-encodings">
-<h2>A note on encodings<a class="headerlink" href="#a-note-on-encodings" title="永久链接至标题">¶</a></h2>
+<h2>关于编码的说明<a class="headerlink" href="#a-note-on-encodings" title="永久链接至标题">¶</a></h2>
 <div class="versionadded">
 <p><span class="versionmodified added">0.9 新版功能.</span></p>
 </div>
-<p>Pygments tries to be smart regarding encodings in the formatting process:</p>
+<p>Pygments 试图在格式化过程中对编码进行智能处理：</p>
 <ul class="simple">
-<li><p>If you give an <code class="docutils literal notranslate"><span class="pre">encoding</span></code> option, it will be used as the input and
-output encoding.</p></li>
-<li><p>If you give an <code class="docutils literal notranslate"><span class="pre">outencoding</span></code> option, it will override <code class="docutils literal notranslate"><span class="pre">encoding</span></code>
-as the output encoding.</p></li>
-<li><p>If you give an <code class="docutils literal notranslate"><span class="pre">inencoding</span></code> option, it will override <code class="docutils literal notranslate"><span class="pre">encoding</span></code>
-as the input encoding.</p></li>
-<li><p>If you don’t give an encoding and have given an output file, the default
-encoding for lexer and formatter is the terminal encoding or the default
-locale encoding of the system.  As a last resort, <code class="docutils literal notranslate"><span class="pre">latin1</span></code> is used (which
-will pass through all non-ASCII characters).</p></li>
-<li><p>If you don’t give an encoding and haven’t given an output file (that means
-output is written to the console), the default encoding for lexer and
-formatter is the terminal encoding (<code class="docutils literal notranslate"><span class="pre">sys.stdout.encoding</span></code>).</p></li>
+<li><p>如果你给出一个 <code class="docutils literal notranslate"><span class="pre">encoding</span></code> 选项，它将被用作输入和输出编码。</p></li>
+<li><p>如果你给出一个 <code class="docutils literal notranslate"><span class="pre">outencoding</span></code> 选项，它将覆盖 <code class="docutils literal notranslate"><span class="pre">encoding</span></code> 作为输出编码。</p></li>
+<li><p>如果你给一个 <code class="docutils literal notranslate"><span class="pre">inencoding</span></code> 选项，它将覆盖 <code class="docutils literal notranslate"><span class="pre">encoding</span></code> 作为输入编码。</p></li>
+<li><p>如果你没有给出一个编码，并且已经给出了一个输出文件，那么 lexer 和 formatter 的默认编码是终端编码或系统的默认 locale 编码。作为最后的手段，使用 <code class="docutils literal notranslate"><span class="pre">latin1</span></code> （它将通过所有非 ASCII 字符）。</p></li>
+<li><p>如果你没有给出编码，也没有给出输出文件（这意味着输出被写入控制台），那么 lexer 和 formatter 的默认编码是终端编码（<code class="docutils literal notranslate"><span class="pre">sys.stdout.encoding</span></code>）。</p></li>
 </ul>
 </section>
 </section>

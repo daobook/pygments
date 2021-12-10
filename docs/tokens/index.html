@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Builtin Tokens &#8212; Pygments</title>
+    <title>内置形符 &#8212; Pygments</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/pygments14.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -17,8 +17,8 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="索引" href="../../genindex/" />
     <link rel="search" title="搜索" href="../../search/" />
-    <link rel="next" title="The full Pygments API" href="../api/" />
-    <link rel="prev" title="Unicode and Encodings" href="../unicode/" />
+    <link rel="next" title="完整的 Pygments API" href="../api/" />
+    <link rel="prev" title="Unicode 和编码" href="../unicode/" />
     <link href='https://fonts.googleapis.com/css?family=PT+Sans:300,400,700'
           rel='stylesheet' type='text/css'>
  
@@ -83,7 +83,7 @@
   <div>
     <h3><a href="../../">目录</a></h3>
     <ul>
-<li><a class="reference internal" href="#">Builtin Tokens</a><ul>
+<li><a class="reference internal" href="#">内置形符</a><ul>
 <li><a class="reference internal" href="#keyword-tokens">Keyword Tokens</a></li>
 <li><a class="reference internal" href="#name-tokens">Name Tokens</a></li>
 <li><a class="reference internal" href="#literals">Literals</a></li>
@@ -99,12 +99,12 @@
 <div>
   <h4>上一个主题</h4>
   <p class="topless"><a href="../unicode/"
-                        title="上一章">Unicode and Encodings</a></p>
+                        title="上一章">Unicode 和编码</a></p>
 </div>
 <div>
   <h4>下一个主题</h4>
   <p class="topless"><a href="../api/"
-                        title="下一章">The full Pygments API</a></p>
+                        title="下一章">完整的 Pygments API</a></p>
 </div>
   <div role="note" aria-label="source link">
     <h3>本页</h3>
@@ -132,10 +132,9 @@
           <div class="body" role="main">
             
   <section id="module-pygments.token">
-<span id="builtin-tokens"></span><h1>Builtin Tokens<a class="headerlink" href="#module-pygments.token" title="永久链接至标题">¶</a></h1>
-<p>In the <a class="reference internal" href="#module-pygments.token" title="pygments.token"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygments.token</span></code></a> module, there is a special object called <cite>Token</cite>
-that is used to create token types.</p>
-<p>You can create a new token type by accessing an attribute of <cite>Token</cite>:</p>
+<span id="builtin-tokens"></span><h1>内置形符<a class="headerlink" href="#module-pygments.token" title="永久链接至标题">¶</a></h1>
+<p>在 <a class="reference internal" href="#module-pygments.token" title="pygments.token"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygments.token</span></code></a> 模块中，有一个叫做 <cite>Token</cite> 的特殊对象，用来创建 token 类型。</p>
+<p>你可以通过访问 <cite>Token</cite> 的一个属性来创建一个新的 token 类型：</p>
 <div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pygments.token</span> <span class="kn">import</span> <span class="n">Token</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Token</span><span class="o">.</span><span class="n">String</span>
 <span class="go">Token.String</span>
@@ -143,9 +142,8 @@ that is used to create token types.</p>
 <span class="go">True</span>
 </pre></div>
 </div>
-<p>Note that tokens are singletons so you can use the <code class="docutils literal notranslate"><span class="pre">is</span></code> operator for comparing
-token types.</p>
-<p>As of Pygments 0.7 you can also use the <code class="docutils literal notranslate"><span class="pre">in</span></code> operator to perform set tests:</p>
+<p>注意，token 是 singleton，所以你可以使用 <code class="docutils literal notranslate"><span class="pre">is</span></code> 操作符来比较 token 类型。</p>
+<p>从 Pygments 0.7 开始，你也可以使用 <code class="docutils literal notranslate"><span class="pre">in</span></code> 操作符来进行集合测试：</p>
 <div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pygments.token</span> <span class="kn">import</span> <span class="n">Comment</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Comment</span><span class="o">.</span><span class="n">Single</span> <span class="ow">in</span> <span class="n">Comment</span>
 <span class="go">True</span>
@@ -153,26 +151,22 @@ token types.</p>
 <span class="go">False</span>
 </pre></div>
 </div>
-<p>This can be useful in <a class="reference internal" href="../filters/"><span class="doc">filters</span></a> and if you write lexers on your
-own without using the base lexers.</p>
-<p>You can also split a token type into a hierarchy, and get the parent of it:</p>
+<p>这在 <a class="reference internal" href="../filters/"><span class="doc">过滤器</span></a> 中可能很有用，如果你不使用基础词库而自己编写词库的话。</p>
+<p>你也可以将一个 token 类型分成一个层次，并获得它的父级：</p>
 <div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">String</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
 <span class="go">[Token, Token.Literal, Token.Literal.String]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">String</span><span class="o">.</span><span class="n">parent</span>
 <span class="go">Token.Literal</span>
 </pre></div>
 </div>
-<p>In principle, you can create an unlimited number of token types but nobody can
-guarantee that a style would define style rules for a token type. Because of
-that, Pygments proposes some global token types defined in the
-<cite>pygments.token.STANDARD_TYPES</cite> dict.</p>
-<p>For some tokens aliases are already defined:</p>
+<p>原则上，你可以创建无限数量的 token 类型，但没有人可以保证一个样式会定义一个 token 类型的样式规则。正因为如此，Pygments 提出了一些定义在 <cite>pygments.token.STANDARD_TYPES</cite> dict 中的全局 token 类型。</p>
+<p>对于一些 token，已经定义了别名</p>
 <div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pygments.token</span> <span class="kn">import</span> <span class="n">String</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">String</span>
 <span class="go">Token.Literal.String</span>
 </pre></div>
 </div>
-<p>Inside the <a class="reference internal" href="#module-pygments.token" title="pygments.token"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygments.token</span></code></a> module the following aliases are defined:</p>
+<p>在 <a class="reference internal" href="#module-pygments.token" title="pygments.token"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pygments.token</span></code></a> 模块内，定义了以下别名：</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 17%" />
@@ -182,15 +176,15 @@ that, Pygments proposes some global token types defined in the
 <tbody>
 <tr class="row-odd"><td><p><cite>Text</cite></p></td>
 <td><p><cite>Token.Text</cite></p></td>
-<td><p>for any type of text data</p></td>
+<td><p>用于任何类型的文本数据</p></td>
 </tr>
 <tr class="row-even"><td><p><cite>Whitespace</cite></p></td>
 <td><p><cite>Token.Text.Whitespace</cite></p></td>
-<td><p>for specially highlighted whitespace</p></td>
+<td><p>用于 高亮 的空白</p></td>
 </tr>
 <tr class="row-odd"><td><p><cite>Error</cite></p></td>
 <td><p><cite>Token.Error</cite></p></td>
-<td><p>represents lexer errors</p></td>
+<td><p>代表词法错误</p></td>
 </tr>
 <tr class="row-even"><td><p><cite>Other</cite></p></td>
 <td><p><cite>Token.Other</cite></p></td>

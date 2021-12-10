@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Using Pygments in various scenarios &#8212; Pygments</title>
+    <title>在各种场景下使用 Pygments &#8212; Pygments</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/pygments14.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -83,11 +83,11 @@
   <div>
     <h3><a href="../../">目录</a></h3>
     <ul>
-<li><a class="reference internal" href="#">Using Pygments in various scenarios</a><ul>
+<li><a class="reference internal" href="#">在各种场景下使用 Pygments</a><ul>
 <li><a class="reference internal" href="#markdown">Markdown</a></li>
 <li><a class="reference internal" href="#textmate">TextMate</a></li>
-<li><a class="reference internal" href="#bash-completion">Bash completion</a></li>
-<li><a class="reference internal" href="#wrappers-for-other-languages">Wrappers for other languages</a></li>
+<li><a class="reference internal" href="#bash-completion">Bash 自动补全</a></li>
+<li><a class="reference internal" href="#wrappers-for-other-languages">用于其他语言的封装器</a></li>
 </ul>
 </li>
 </ul>
@@ -129,28 +129,22 @@
           <div class="body" role="main">
             
   <section id="using-pygments-in-various-scenarios">
-<h1>Using Pygments in various scenarios<a class="headerlink" href="#using-pygments-in-various-scenarios" title="永久链接至标题">¶</a></h1>
+<h1>在各种场景下使用 Pygments<a class="headerlink" href="#using-pygments-in-various-scenarios" title="永久链接至标题">¶</a></h1>
 <section id="markdown">
 <h2>Markdown<a class="headerlink" href="#markdown" title="永久链接至标题">¶</a></h2>
-<p>Since Pygments 0.9, the distribution ships <a class="reference external" href="https://pypi.org/project/Markdown/">Markdown</a> preprocessor sample code
-that uses Pygments to render source code in
-<code class="file docutils literal notranslate"><span class="pre">external/markdown-processor.py</span></code>.  You can copy and adapt it to your
-liking.</p>
+<p>从Pygments 0.9开始，发行版提供了 <a class="reference external" href="https://pypi.org/project/Markdown/">Markdown</a> 预处理器的样本代码，它使用 Pygments 来渲染 <a class="reference download internal" download="" href="../../_downloads/f4a111a8a45d5f85eb97d60e0fbac69d/markdown-processor.py"><code class="xref download docutils literal notranslate"><span class="pre">external/markdown-processor.py</span></code></a> 中的源代码。你可以根据自己的喜好复制和改编它。</p>
 </section>
 <section id="textmate">
 <h2>TextMate<a class="headerlink" href="#textmate" title="永久链接至标题">¶</a></h2>
-<p>Antonio Cangiano has created a Pygments bundle for TextMate that allows to
-colorize code via a simple menu option.  It can be found <a class="reference external" href="https://programmingzen.com/pygments-textmate-bundle/">here</a>.</p>
+<p>Antonio Cangiano 为 TextMate 创建了一个 Pygments 捆绑包，可以通过一个简单的菜单选项来给代码着色。它可以在 <a class="reference external" href="https://programmingzen.com/pygments-textmate-bundle/">这里</a> 找到。</p>
 </section>
 <section id="bash-completion">
-<h2>Bash completion<a class="headerlink" href="#bash-completion" title="永久链接至标题">¶</a></h2>
-<p>The source distribution contains a file <code class="docutils literal notranslate"><span class="pre">external/pygments.bashcomp</span></code> that
-sets up completion for the <code class="docutils literal notranslate"><span class="pre">pygmentize</span></code> command in bash.</p>
+<h2>Bash 自动补全<a class="headerlink" href="#bash-completion" title="永久链接至标题">¶</a></h2>
+<p>源码发行包含一个文件 <a class="reference download internal" download="" href="../../_downloads/f2598a0b94da794c6c12157b6f8c301f/pygments.bashcomp"><code class="xref download docutils literal notranslate"><span class="pre">external/pygments.bashcomp</span></code></a>，为 bash 中的 <code class="docutils literal notranslate"><span class="pre">pygmentize</span></code> 命令设置完成。</p>
 </section>
 <section id="wrappers-for-other-languages">
-<h2>Wrappers for other languages<a class="headerlink" href="#wrappers-for-other-languages" title="永久链接至标题">¶</a></h2>
-<p>These libraries provide Pygments highlighting for users of other languages
-than Python:</p>
+<h2>用于其他语言的封装器<a class="headerlink" href="#wrappers-for-other-languages" title="永久链接至标题">¶</a></h2>
+<p>这些库为 Python 以外的其他语言的用户提供 Pygments 高亮显示：</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://github.com/pygments/pygments.rb">pygments.rb</a>, a pygments wrapper for Ruby</p></li>
 <li><p><a class="reference external" href="https://github.com/bfontaine/clygments">Clygments</a>, a pygments wrapper for

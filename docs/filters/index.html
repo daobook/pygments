@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Filters &#8212; Pygments</title>
+    <title>过滤器 &#8212; Pygments</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/pygments14.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -17,8 +17,8 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="索引" href="../../genindex/" />
     <link rel="search" title="搜索" href="../../search/" />
-    <link rel="next" title="Available formatters" href="../formatters/" />
-    <link rel="prev" title="Available lexers" href="../lexers/" />
+    <link rel="next" title="可用的格式化器" href="../formatters/" />
+    <link rel="prev" title="可用的词库" href="../lexers/" />
     <link href='https://fonts.googleapis.com/css?family=PT+Sans:300,400,700'
           rel='stylesheet' type='text/css'>
  
@@ -83,8 +83,8 @@
   <div>
     <h3><a href="../../">目录</a></h3>
     <ul>
-<li><a class="reference internal" href="#">Filters</a><ul>
-<li><a class="reference internal" href="#builtin-filters">Builtin Filters</a></li>
+<li><a class="reference internal" href="#">过滤器</a><ul>
+<li><a class="reference internal" href="#builtin-filters">内置过滤器</a></li>
 </ul>
 </li>
 </ul>
@@ -93,12 +93,12 @@
 <div>
   <h4>上一个主题</h4>
   <p class="topless"><a href="../lexers/"
-                        title="上一章">Available lexers</a></p>
+                        title="上一章">可用的词库</a></p>
 </div>
 <div>
   <h4>下一个主题</h4>
   <p class="topless"><a href="../formatters/"
-                        title="下一章">Available formatters</a></p>
+                        title="下一章">可用的格式化器</a></p>
 </div>
   <div role="note" aria-label="source link">
     <h3>本页</h3>
@@ -126,20 +126,12 @@
           <div class="body" role="main">
             
   <section id="filters">
-<h1>Filters<a class="headerlink" href="#filters" title="永久链接至标题">¶</a></h1>
+<h1>过滤器<a class="headerlink" href="#filters" title="永久链接至标题">¶</a></h1>
 <div class="versionadded">
 <p><span class="versionmodified added">0.7 新版功能.</span></p>
 </div>
-<p>Transforming a stream of tokens into another stream is called “filtering” and is
-done by filters. The most common example of filters transform each token by
-applying a simple rules such as highlighting the token if it is a TODO or
-another special word, or converting keywords to uppercase to enforce a style
-guide. More complex filters can transform the stream of tokens, such as removing
-the line identation or merging tokens together. It should be noted that pygments
-filters are entirely unrelated to Python’s <a class="reference external" href="https://docs.python.org/3/library/functions.html#filter">filter</a>.</p>
-<p>An arbitrary number of filters can be applied to token streams coming from
-lexers to improve or annotate the output. To apply a filter, you can use the
-<cite>add_filter()</cite> method of a lexer:</p>
+<p>将一个形符流转化为另一个流被称为 “过滤”，由过滤器来完成。最常见的过滤器的例子是通过应用简单的规则来转换每个形符，如高亮形符，如果它是一个 TODO 或其他特殊的词，或将关键字转换为大写字母以执行风格指南。更复杂的过滤器可以改变形符流，例如删除行的形符或将形符合并在一起。应该注意的是，pygments 过滤器与 Python 的 <a class="reference external" href="https://docs.python.org/3/library/functions.html#filter">filter</a> 完全没有关系。</p>
+<p>可以将任意数量的过滤器应用于来自词库的标记流，以改善或注释输出。要应用一个过滤器，你可以使用 lexer 的 <cite>add_filter()</cite> 方法：</p>
 <div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pygments.lexers</span> <span class="kn">import</span> <span class="n">PythonLexer</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">PythonLexer</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># add a filter given by a string and options</span>
@@ -151,19 +143,16 @@ lexers to improve or annotate the output. To apply a filter, you can use the
 <span class="gp">&gt;&gt;&gt; </span><span class="n">l</span><span class="o">.</span><span class="n">add_filter</span><span class="p">(</span><span class="n">KeywordCaseFilter</span><span class="p">(</span><span class="n">case</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>The <cite>add_filter()</cite> method takes keyword arguments which are forwarded to
-the constructor of the filter.</p>
-<p>To get a list of all registered filters by name, you can use the
-<cite>get_all_filters()</cite> function from the <cite>pygments.filters</cite> module that returns an
-iterable for all known filters.</p>
-<p>If you want to write your own filter, have a look at <a class="reference internal" href="../filterdevelopment/"><span class="doc">Write your own filter</span></a>.</p>
+<p><cite>add_filter()</cite> 方法需要关键字参数，这些参数被转发给过滤器的构造函数。</p>
+<p>要想按名称获得所有已注册过滤器的列表，可以使用 <cite>pygments.filters</cite> 模块中的 <cite>get_all_filters()</cite> 函数，该函数为所有已知的过滤器返回一个可迭代的列表。</p>
+<p>如果你想写你自己的过滤器，请看 <a class="reference internal" href="../filterdevelopment/"><span class="doc">Write your own filter</span></a>。</p>
 <section id="builtin-filters">
-<h2>Builtin Filters<a class="headerlink" href="#builtin-filters" title="永久链接至标题">¶</a></h2>
+<h2>内置过滤器<a class="headerlink" href="#builtin-filters" title="永久链接至标题">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="CodeTagFilter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CodeTagFilter</span></span><a class="headerlink" href="#CodeTagFilter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Name</dt>
+<dt class="field-odd">名称</dt>
 <dd class="field-odd"><p>codetagify</p>
 </dd>
 </dl>
@@ -180,7 +169,7 @@ highlight <code class="docutils literal notranslate"><span class="pre">XXX</span
 <dt class="sig sig-object py" id="KeywordCaseFilter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">KeywordCaseFilter</span></span><a class="headerlink" href="#KeywordCaseFilter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Name</dt>
+<dt class="field-odd">名称</dt>
 <dd class="field-odd"><p>keywordcase</p>
 </dd>
 </dl>
@@ -200,7 +189,7 @@ code to your styleguide.</p>
 <dt class="sig sig-object py" id="NameHighlightFilter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NameHighlightFilter</span></span><a class="headerlink" href="#NameHighlightFilter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Name</dt>
+<dt class="field-odd">名称</dt>
 <dd class="field-odd"><p>highlight</p>
 </dd>
 </dl>
@@ -230,7 +219,7 @@ used for highlighting the strings in <cite>names</cite>.  The default is
 <dt class="sig sig-object py" id="RaiseOnErrorTokenFilter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">RaiseOnErrorTokenFilter</span></span><a class="headerlink" href="#RaiseOnErrorTokenFilter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Name</dt>
+<dt class="field-odd">名称</dt>
 <dd class="field-odd"><p>raiseonerror</p>
 </dd>
 </dl>
@@ -250,7 +239,7 @@ The default is <cite>pygments.filters.ErrorToken</cite>.</p>
 <dt class="sig sig-object py" id="VisibleWhitespaceFilter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VisibleWhitespaceFilter</span></span><a class="headerlink" href="#VisibleWhitespaceFilter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Name</dt>
+<dt class="field-odd">名称</dt>
 <dd class="field-odd"><p>whitespace</p>
 </dd>
 </dl>
@@ -288,7 +277,7 @@ disrupt background colors.  The default is <code class="docutils literal notrans
 <dt class="sig sig-object py" id="GobbleFilter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GobbleFilter</span></span><a class="headerlink" href="#GobbleFilter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Name</dt>
+<dt class="field-odd">名称</dt>
 <dd class="field-odd"><p>gobble</p>
 </dd>
 </dl>
@@ -310,7 +299,7 @@ amount of space that isn’t desired in the output.</p>
 <dt class="sig sig-object py" id="TokenMergeFilter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TokenMergeFilter</span></span><a class="headerlink" href="#TokenMergeFilter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Name</dt>
+<dt class="field-odd">名称</dt>
 <dd class="field-odd"><p>tokenmerge</p>
 </dd>
 </dl>
@@ -325,7 +314,7 @@ stream of a lexer.</p>
 <dt class="sig sig-object py" id="SymbolFilter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SymbolFilter</span></span><a class="headerlink" href="#SymbolFilter" title="永久链接至目标">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Name</dt>
+<dt class="field-odd">名称</dt>
 <dd class="field-odd"><p>symbols</p>
 </dd>
 </dl>

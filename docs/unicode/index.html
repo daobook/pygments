@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Unicode and Encodings &#8212; Pygments</title>
+    <title>Unicode 和编码 &#8212; Pygments</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/pygments14.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -17,8 +17,8 @@
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="索引" href="../../genindex/" />
     <link rel="search" title="搜索" href="../../search/" />
-    <link rel="next" title="Builtin Tokens" href="../tokens/" />
-    <link rel="prev" title="Styles" href="../styles/" />
+    <link rel="next" title="内置形符" href="../tokens/" />
+    <link rel="prev" title="风格" href="../styles/" />
     <link href='https://fonts.googleapis.com/css?family=PT+Sans:300,400,700'
           rel='stylesheet' type='text/css'>
  
@@ -83,12 +83,12 @@
 <div>
   <h4>上一个主题</h4>
   <p class="topless"><a href="../styles/"
-                        title="上一章">Styles</a></p>
+                        title="上一章">风格</a></p>
 </div>
 <div>
   <h4>下一个主题</h4>
   <p class="topless"><a href="../tokens/"
-                        title="下一章">Builtin Tokens</a></p>
+                        title="下一章">内置形符</a></p>
 </div>
   <div role="note" aria-label="source link">
     <h3>本页</h3>
@@ -116,49 +116,31 @@
           <div class="body" role="main">
             
   <section id="unicode-and-encodings">
-<h1>Unicode and Encodings<a class="headerlink" href="#unicode-and-encodings" title="永久链接至标题">¶</a></h1>
-<p>Since Pygments 0.6, all lexers use unicode strings internally. Because of that
-you might encounter the occasional <code class="xref py py-exc docutils literal notranslate"><span class="pre">UnicodeDecodeError</span></code> if you pass strings
-with the wrong encoding.</p>
-<p>Per default all lexers have their input encoding set to <cite>guess</cite>.  This means
-that the following encodings are tried:</p>
+<h1>Unicode 和编码<a class="headerlink" href="#unicode-and-encodings" title="永久链接至标题">¶</a></h1>
+<p>从 Pygments 0.6 开始，所有的词库在内部使用 unicode 字符串。正因为如此，如果你传递编码错误的字符串，你可能偶尔会遇到 <code class="xref py py-exc docutils literal notranslate"><span class="pre">UnicodeDecodeError</span></code>。</p>
+<p>默认情况下，所有词库的输入编码都设置为 <cite>guess</cite>。这意味着将尝试以下编码：</p>
 <ul class="simple">
-<li><p>UTF-8 (including BOM handling)</p></li>
-<li><p>The locale encoding (i.e. the result of <cite>locale.getpreferredencoding()</cite>)</p></li>
-<li><p>As a last resort, <cite>latin1</cite></p></li>
+<li><p>UTF-8 （包括 BOM 处理）</p></li>
+<li><p>本地化编码（即 <cite>locale.getpreferredencoding()</cite> 的结果）</p></li>
+<li><p>作为最后的手段，<cite>latin1</cite></p></li>
 </ul>
-<p>If you pass a lexer a byte string object (not unicode), it tries to decode the
-data using this encoding.</p>
-<p>You can override the encoding using the <cite>encoding</cite> or <cite>inencoding</cite> lexer
-options.  If you have the <a class="reference external" href="https://chardet.github.io/">chardet</a> library installed and set the encoding to
-<code class="docutils literal notranslate"><span class="pre">chardet</span></code> if will analyse the text and use the encoding it thinks is the
-right one automatically:</p>
+<p>如果你向 lexer 传递一个字节字符串对象（不是 unicode），它就会尝试使用这个编码对数据进行解码。</p>
+<p>你可以使用 <cite>encoding</cite> 或 <cite>inencoding</cite> 解析器选项覆盖编码。如果你安装了 <a class="reference external" href="https://chardet.github.io/">chardet</a> 库，并将编码设置为 <code class="docutils literal notranslate"><span class="pre">chardet</span></code>，那么它将分析文本并自动使用它认为正确的编码：</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygments.lexers</span> <span class="kn">import</span> <span class="n">PythonLexer</span>
 <span class="n">lexer</span> <span class="o">=</span> <span class="n">PythonLexer</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;chardet&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The best way is to pass Pygments unicode objects. In that case you can’t get
-unexpected output.</p>
-<p>The formatters now send Unicode objects to the stream if you don’t set the
-output encoding. You can do so by passing the formatters an <cite>encoding</cite> option:</p>
+<p>最好的方法是传递 Pygments unicode 对象。在这种情况下，你不可能得到意外的输出。</p>
+<p>如果你不设置输出编码，格式化器现在将 Unicode 对象发送到流中。你可以通过传递给格式化器一个 <cite>encoding</cite> 选项来实现：</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pygments.formatters</span> <span class="kn">import</span> <span class="n">HtmlFormatter</span>
 <span class="n">f</span> <span class="o">=</span> <span class="n">HtmlFormatter</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>You will have to set this option if you have non-ASCII characters in the
-source and the output stream does not accept Unicode written to it!</strong>
-This is the case for all regular files and for terminals.</p>
-<p>Note: The Terminal formatter tries to be smart: if its output stream has an
-<cite>encoding</cite> attribute, and you haven’t set the option, it will encode any
-Unicode string with this encoding before writing it. This is the case for
-<cite>sys.stdout</cite>, for example. The other formatters don’t have that behavior.</p>
-<p>Another note: If you call Pygments via the command line (<cite>pygmentize</cite>),
-encoding is handled differently, see <a class="reference internal" href="../cmdline/"><span class="doc">the command line docs</span></a>.</p>
+<p><strong>如果你的源文件中有非 ASCII 字符，而输出流不接受 Unicode 写入，你就必须设置这个选项！</strong> 所有常规文件和终端都是这种情况。</p>
+<p>注意：终端格式化器试图变得聪明：如果它的输出流有一个 <cite>encoding</cite> 属性，而你没有设置该选项，它将在写入任何 Unicode 字符串之前用该编码进行编码。例如，<cite>sys.stdout</cite> 就是这种情况。其他格式化器没有这种行为。</p>
+<p>另一个说明：如果你通过命令行调用 Pygments（<cite>pygmentize</cite>），编码的处理方式是不同的，见 <a class="reference internal" href="../cmdline/"><span class="doc">命令行文档</span></a>。</p>
 <div class="versionadded">
-<p><span class="versionmodified added">0.7 新版功能: </span>The formatters now also accept an <cite>outencoding</cite> option which will override
-the <cite>encoding</cite> option if given. This makes it possible to use a single
-options dict with lexers and formatters, and still have different input and
-output encodings.</p>
+<p><span class="versionmodified added">0.7 新版功能: </span>格式化器现在也接受一个 <cite>outencoding</cite> 选项，如果给出的话，它将覆盖 <cite>encoding</cite> 选项。这使得使用单一选项的 lexer 和格式化器成为可能，但仍有不同的输入和输出编码。</p>
 </div>
 </section>
 
