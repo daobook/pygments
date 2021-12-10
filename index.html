@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+
+<html lang="zh_CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>欢迎！ &#8212; Pygments</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments14.css" />
+    <script data-url_root="#" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="索引" href="genindex/" />
+    <link rel="search" title="搜索" href="search/" />
+    <link rel="next" title="Pygments documentation" href="docs/" />
+    <link href='https://fonts.googleapis.com/css?family=PT+Sans:300,400,700'
+          rel='stylesheet' type='text/css'>
+ 
+    <style type="text/css">
+      table.right { float: right; margin-left: 20px; }
+      table.right td { border: 1px solid #ccc; }
+      
+      .related { display: none; }
+      
+    </style>
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+  </head><body>
+<div class="outerwrapper">
+<div class="pageheader">
+  <ul>
+    <li><a href="#">Home</a></li>
+    
+    <li><a href="demo/">Demo</a></li>
+    
+    <li><a href="languages/">Languages</a></li>
+    <li><a href="styles/">Styles</a></li>
+    <li><a href="faq/">FAQ</a></li>
+    <li><a href="download/">Get it</a></li>
+    <li><a href="docs/">Docs</a></li>
+  </ul>
+  <div>
+    <a href="#">
+      <img src="_static/logo.png" alt="Pygments logo" />
+    </a>
+  </div>
+</div>
+<div class="flexwrapper">
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><section>
+<h3>Download</h3>
+
+<p>Current version: <b>2.10.0</b></p>
+<p>Get Pygments from the <a href="https://pypi.python.org/pypi/Pygments">Python Package
+    Index</a>, or install it with:</p>
+<pre>pip install Pygments</pre>
+
+</section>
+<section>
+<h3>Questions? Suggestions?</h3>
+
+<p><img src="_static/github.png" width="24" />
+    Clone at <a href="https://github.com/pygments/pygments">GitHub</a>.</p>
+<p>You can also open an issue at the
+  <a href="https://github.com/pygments/pygments/issues">tracker</a>.</p>
+</section>
+
+<p class="logo">A <a href="https://www.pocoo.org/">
+    <img src="_static/pocoo.png" /></a> project</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">快速搜索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="转向" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="welcome">
+<h1>欢迎！<a class="headerlink" href="#welcome" title="永久链接至标题">¶</a></h1>
+<p>这里是 Pygments 主页。它是一个通用的语法高亮器，适用于代码托管、论坛、维基或其他需要美化源代码的应用程序。高亮有：</p>
+<ul class="simple">
+<li><p>支持超过 500 种语言和其他文本格式的广泛内容</p></li>
+<li><p>特别注意细节，增加高亮质量</p></li>
+<li><p>对新的语言和格式的支持很容易添加；大多数语言使用简单的基于正则表达式的词法机制</p></li>
+<li><p>有多种输出格式可供选择，其中包括 HTML、RTF、LaTeX 和 ANSI 序列</p></li>
+<li><p>它可以作为一个命令行工具和一个库使用</p></li>
+</ul>
+<p>在 <a class="reference internal" href="faq/"><span class="doc">常见问题清单</span></a> 或 <a class="reference internal" href="docs/"><span class="doc">文档</span></a> 中阅读更多信息，或者 <a class="reference external" href="https://pypi.python.org/pypi/Pygments">下载最新版本</a>。</p>
+<section id="contribute">
+<span id="id1"></span><h2>贡献<a class="headerlink" href="#contribute" title="永久链接至标题">¶</a></h2>
+<p>像每一个开源项目一样，我们一直在寻找志愿者来帮助我们进行编程。需要有 Python 知识，但不要害怕：Python 是一种非常清晰和容易学习的语言。</p>
+<p>开发是在 <a class="reference external" href="https://github.com/pygments/pygments">GitHub</a> 上进行的。</p>
+<p>如果你发现了一个错误，只需在 GitHub 跟踪器上开一个 ticket。请务必登录，以便在问题被修复时得到通知 —— 由于该库相当稳定，开发速度并不快。你也可以给开发人员发送电子邮件，见下文。</p>
+</section>
+<section id="the-authors">
+<h2>作者<a class="headerlink" href="#the-authors" title="永久链接至标题">¶</a></h2>
+<p>Pygments 由 <strong>Georg Brandl</strong> 维护，电子邮件地址为 <em>georg</em><em>&#64;</em><em>python.org</em> 和 <strong>Matthäus Chajdas</strong>。</p>
+<p>许多词条和修正都是由 <strong>Armin Ronacher</strong>、<a class="reference external" href="https://dev.pocoo.org/">Pocoo</a> 团队的其他成员和 <strong>Tim Hatch</strong> 贡献的。</p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    </div> 
+    <div class="footer" role="contentinfo">
+      &copy; Copyright 2006-2021, Georg Brandl and Pygments contributors.
+      Created using <a href="https://sphinx-doc.org/">Sphinx</a> 4.3.1. <br/>
+      Pygments logo created by <a href="https://joelunger.com">Joel Unger</a>.
+      Backgrounds from <a href="https://subtlepatterns.com">subtlepatterns.com</a>.
+    </div>
+  </div> 
+
+  </body>
+</html>
