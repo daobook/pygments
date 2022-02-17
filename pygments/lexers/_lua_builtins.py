@@ -194,10 +194,7 @@ if __name__ == '__main__':  # pragma: no cover
             return name.startswith('coroutine.')
 
         def is_in_modules_module(name):
-            if name in ['require', 'module'] or name.startswith('package'):
-                return True
-            else:
-                return False
+            return bool(name in ['require', 'module'] or name.startswith('package'))
 
         def is_in_string_module(name):
             return name.startswith('string.')
@@ -250,10 +247,7 @@ if __name__ == '__main__':  # pragma: no cover
         for mod, cb in module_callbacks().items():
             if cb(name):
                 return mod
-        if '.' in name:
-            return name.split('.')[0]
-        else:
-            return 'basic'
+        return name.split('.')[0] if '.' in name else 'basic'
 
     def regenerate(filename, modules):
         with open(filename) as fp:

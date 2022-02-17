@@ -124,16 +124,16 @@ if __name__ == '__main__':  # pragma: no cover
         if ord(c) == 0xdc00:
             # Hack to avoid combining this combining with the preceeding high
             # surrogate, 0xdbff, when doing a repr.
-            c = '\\' + c
-        elif ord(c) in (0x2d, 0x5b, 0x5c, 0x5d, 0x5e):
+            c = f'\\{c}'
+        elif ord(c) in {0x2D, 0x5B, 0x5C, 0x5D, 0x5E}:
             # Escape regex metachars.
-            c = '\\' + c
+            c = f'\\{c}'
         categories.setdefault(cat, []).append(c)
         # XID_START and XID_CONTINUE are special categories used for matching
         # identifiers in Python 3.
         if c.isidentifier():
             categories['xid_start'].append(c)
-        if ('a' + c).isidentifier():
+        if f'a{c}'.isidentifier():
             categories['xid_continue'].append(c)
 
     with open(__file__, 'w') as fp:

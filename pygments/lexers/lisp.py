@@ -8,6 +8,7 @@
     :license: BSD, see LICENSE for details.
 """
 
+
 import re
 
 from pygments.lexer import RegexLexer, include, bygroups, words, default
@@ -19,6 +20,8 @@ from pygments.lexers.python import PythonLexer
 __all__ = ['SchemeLexer', 'CommonLispLexer', 'HyLexer', 'RacketLexer',
            'NewLispLexer', 'EmacsLispLexer', 'ShenLexer', 'CPSALexer',
            'XtlangLexer', 'FennelLexer']
+
+
 
 
 class SchemeLexer(RegexLexer):
@@ -114,66 +117,35 @@ class SchemeLexer(RegexLexer):
             default('value'),
         ],
         'value': [
-            # the comments
-            # and going to the end of the line
             (r';.*?$', Comment.Single),
-            # multi-line comment
             (r'#\|', Comment.Multiline, 'multiline-comment'),
-            # commented form (entire sexpr folliwng)
             (r'#;\s*\(', Comment, 'commented-form'),
-            # signifies that the program text that follows is written with the
-            # lexical and datum syntax described in r6rs
             (r'#!r6rs', Comment),
-
-            # whitespaces - usually not relevant
             (r'\s+', Text),
-
-            # numbers
             (r'-?\d+\.\d+', Number.Float, '#pop'),
             (r'-?\d+', Number.Integer, '#pop'),
-            # support for uncommon kinds of numbers -
-            # have to figure out what the characters mean
-            # (r'(#e|#i|#b|#o|#d|#x)[\d.]+', Number),
-
-            # strings, symbols and characters
             (r'"(\\\\|\\[^\\]|[^"\\])*"', String, "#pop"),
             (r"'" + valid_name, String.Symbol, "#pop"),
             (r"#\\([()/'\"._!§$%& ?=+-]|[a-zA-Z0-9]+)", String.Char, "#pop"),
-
-            # constants
             (r'(#t|#f)', Name.Constant, '#pop'),
-
-            # special operators
             (r"('|#|`|,@|,|\.)", Operator),
-
-            # highlight the keywords
-            ('(%s)' % '|'.join(re.escape(entry) + ' ' for entry in keywords),
-             Keyword,
-             '#pop'),
-
-            # first variable in a quoted string like
-            # '(this is syntactic sugar)
+            (
+                '(%s)'
+                % '|'.join(f'{re.escape(entry)} ' for entry in keywords),
+                Keyword,
+                '#pop',
+            ),
             (r"(?<='\()" + valid_name, Name.Variable, '#pop'),
-            (r"(?<=#\()" + valid_name, Name.Variable, '#pop'),
-
-            # highlight the builtins
-            (r"(?<=\()(%s)" % '|'.join(re.escape(entry) + ' ' for entry in builtins),
-             Name.Builtin,
-             '#pop'),
-
-            # the remaining functions
-            (r'(?<=\()' + valid_name, Name.Function, '#pop'),
-            # find the remaining variables
+            (f'(?<=#\\(){valid_name}', Name.Variable, '#pop'),
+            (
+                r"(?<=\()(%s)"
+                % '|'.join(f'{re.escape(entry)} ' for entry in builtins),
+                Name.Builtin,
+                '#pop',
+            ),
+            (f'(?<=\\(){valid_name}', Name.Function, '#pop'),
             (valid_name, Name.Variable, '#pop'),
-
-            # the famous parentheses!
-
-            # Push scheme-root to enter a state that will parse as many things
-            # as needed in the parentheses.
             (r'\(|\[', Punctuation, 'scheme-root'),
-            # Pop one 'value', one 'scheme-root', and yet another 'value', so
-            # we get back to a state parsing expressions as needed in the
-            # enclosing context.
             (r'\)|\]', Punctuation, '#pop:3'),
         ],
         'multiline-comment': [
@@ -2343,8 +2315,7 @@ class ShenLexer(RegexLexer):
                 yield index, token, value
             if value == '{' and token == Literal:
                 yield index, Punctuation, value
-                for index, token, value in self._process_signature(tokens):
-                    yield index, token, value
+                yield from self._process_signature(tokens)
             else:
                 yield index, token, value
         else:
@@ -2393,52 +2364,29 @@ class CPSALexer(RegexLexer):
 
     tokens = {
         'root': [
-            # the comments - always starting with semicolon
-            # and going to the end of the line
             (r';.*$', Comment.Single),
-
-            # whitespaces - usually not relevant
             (r'\s+', Text),
-
-            # numbers
             (r'-?\d+\.\d+', Number.Float),
             (r'-?\d+', Number.Integer),
-            # support for uncommon kinds of numbers -
-            # have to figure out what the characters mean
-            # (r'(#e|#i|#b|#o|#d|#x)[\d.]+', Number),
-
-            # strings, symbols and characters
             (r'"(\\\\|\\[^\\]|[^"\\])*"', String),
             (r"'" + valid_name, String.Symbol),
             (r"#\\([()/'\"._!§$%& ?=+-]|[a-zA-Z0-9]+)", String.Char),
-
-            # constants
             (r'(#t|#f)', Name.Constant),
-
-            # special operators
             (r"('|#|`|,@|,|\.)", Operator),
-
-            # highlight the keywords
             (words(_keywords, suffix=r'\b'), Keyword),
-
-            # first variable in a quoted string like
-            # '(this is syntactic sugar)
             (r"(?<='\()" + valid_name, Name.Variable),
-            (r"(?<=#\()" + valid_name, Name.Variable),
-
-            # highlight the builtins
+            (f'(?<=#\\(){valid_name}', Name.Variable),
             (words(_builtins, prefix=r'(?<=\()', suffix=r'\b'), Name.Builtin),
-
-            # the remaining functions
-            (r'(?<=\()' + valid_name, Name.Function),
-            # find the remaining variables
+            (f'(?<=\\(){valid_name}', Name.Function),
             (valid_name, Name.Variable),
-
-            # the famous parentheses!
             (r'(\(|\))', Punctuation),
             (r'(\[|\])', Punctuation),
-        ],
+        ]
     }
+
+
+
+
 
 
 class XtlangLexer(RegexLexer):
@@ -2550,99 +2498,90 @@ class XtlangLexer(RegexLexer):
     valid_xtlang_type = r'[]{}[\w<>,*/|!-]+'
 
     tokens = {
-        # keep track of when we're exiting the xtlang form
         'xtlang': [
             (r'\(', Punctuation, '#push'),
             (r'\)', Punctuation, '#pop'),
-
-            (r'(?<=bind-func\s)' + valid_xtlang_name, Name.Function),
-            (r'(?<=bind-val\s)' + valid_xtlang_name, Name.Function),
-            (r'(?<=bind-type\s)' + valid_xtlang_name, Name.Function),
-            (r'(?<=bind-alias\s)' + valid_xtlang_name, Name.Function),
-            (r'(?<=bind-poly\s)' + valid_xtlang_name, Name.Function),
-            (r'(?<=bind-lib\s)' + valid_xtlang_name, Name.Function),
-            (r'(?<=bind-dylib\s)' + valid_xtlang_name, Name.Function),
-            (r'(?<=bind-lib-func\s)' + valid_xtlang_name, Name.Function),
-            (r'(?<=bind-lib-val\s)' + valid_xtlang_name, Name.Function),
-
-            # type annotations
-            (r':' + valid_xtlang_type, Keyword.Type),
-
-            # types
-            (r'(<' + valid_xtlang_type + r'>|\|' + valid_xtlang_type + r'\||/' +
-             valid_xtlang_type + r'/|' + valid_xtlang_type + r'\*)\**',
-             Keyword.Type),
-
-            # keywords
+            (f'(?<=bind-func\\s){valid_xtlang_name}', Name.Function),
+            (f'(?<=bind-val\\s){valid_xtlang_name}', Name.Function),
+            (f'(?<=bind-type\\s){valid_xtlang_name}', Name.Function),
+            (f'(?<=bind-alias\\s){valid_xtlang_name}', Name.Function),
+            (f'(?<=bind-poly\\s){valid_xtlang_name}', Name.Function),
+            (f'(?<=bind-lib\\s){valid_xtlang_name}', Name.Function),
+            (f'(?<=bind-dylib\\s){valid_xtlang_name}', Name.Function),
+            (f'(?<=bind-lib-func\\s){valid_xtlang_name}', Name.Function),
+            (f'(?<=bind-lib-val\\s){valid_xtlang_name}', Name.Function),
+            (f':{valid_xtlang_type}', Keyword.Type),
+            (
+                (
+                    (
+                        (
+                            (
+                                f'(<{valid_xtlang_type}>|\\|{valid_xtlang_type}\\||/'
+                                + valid_xtlang_type
+                            )
+                            + r'/|'
+                        )
+                        + valid_xtlang_type
+                    )
+                    + r'\*)\**'
+                ),
+                Keyword.Type,
+            ),
             (words(xtlang_keywords, prefix=r'(?<=\()'), Keyword),
-
-            # builtins
             (words(xtlang_functions, prefix=r'(?<=\()'), Name.Function),
-
             include('common'),
-
-            # variables
             (valid_xtlang_name, Name.Variable),
         ],
         'scheme': [
             # quoted symbols
             (r"'" + valid_scheme_name, String.Symbol),
-
             # char literals
             (r"#\\([()/'\"._!§$%& ?=+-]|[a-zA-Z0-9]+)", String.Char),
-
             # special operators
             (r"('|#|`|,@|,|\.)", Operator),
-
             # keywords
             (words(scheme_keywords, prefix=r'(?<=\()'), Keyword),
-
             # builtins
             (words(scheme_functions, prefix=r'(?<=\()'), Name.Function),
-
             include('common'),
-
             # variables
             (valid_scheme_name, Name.Variable),
         ],
-        # common to both xtlang and Scheme
         'common': [
             # comments
             (r';.*$', Comment.Single),
-
             # whitespaces - usually not relevant
             (r'\s+', Text),
-
             # numbers
             (r'-?\d+\.\d+', Number.Float),
             (r'-?\d+', Number.Integer),
-
             # binary/oct/hex literals
             (r'(#b|#o|#x)[\d.]+', Number),
-
             # strings
             (r'"(\\\\|\\[^\\]|[^"\\])*"', String),
-
             # true/false constants
             (r'(#t|#f)', Name.Constant),
-
             # keywords
             (words(common_keywords, prefix=r'(?<=\()'), Keyword),
-
             # builtins
             (words(common_functions, prefix=r'(?<=\()'), Name.Function),
-
             # the famous parentheses!
             (r'(\(|\))', Punctuation),
         ],
         'root': [
             # go into xtlang mode
-            (words(xtlang_bind_keywords, prefix=r'(?<=\()', suffix=r'\b'),
-             Keyword, 'xtlang'),
-
-            include('scheme')
+            (
+                words(xtlang_bind_keywords, prefix=r'(?<=\()', suffix=r'\b'),
+                Keyword,
+                'xtlang',
+            ),
+            include('scheme'),
         ],
     }
+
+
+
+
 
 
 class FennelLexer(RegexLexer):
@@ -2689,39 +2628,21 @@ class FennelLexer(RegexLexer):
 
     tokens = {
         'root': [
-            # the only comment form is a semicolon; goes to the end of the line
             (r';.*$', Comment.Single),
-
             (r'[,\s]+', Text),
             (r'-?\d+\.\d+', Number.Float),
             (r'-?\d+', Number.Integer),
-
             (r'"(\\\\|\\[^\\]|[^"\\])*"', String),
-
             (r'(true|false|nil)', Name.Constant),
-
-            # these are technically strings, but it's worth visually
-            # distinguishing them because their intent is different
-            # from regular strings.
-            (r':' + valid_name, String.Symbol),
-
-            # special forms are keywords
+            (f':{valid_name}', String.Symbol),
             (words(special_forms, suffix=' '), Keyword),
-            # these are ... even more special!
             (words(declarations, suffix=' '), Keyword.Declaration),
-            # lua standard library are builtins
             (words(builtins, suffix=' '), Name.Builtin),
-            # special-case the vararg symbol
             (r'\.\.\.', Name.Variable),
-            # regular identifiers
             (valid_name, Name.Variable),
-
-            # all your normal paired delimiters for your programming enjoyment
             (r'(\(|\))', Punctuation),
             (r'(\[|\])', Punctuation),
             (r'(\{|\})', Punctuation),
-
-            # the # symbol is shorthand for a lambda function
             (r'#', Punctuation),
         ]
     }

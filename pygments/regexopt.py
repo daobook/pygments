@@ -20,12 +20,12 @@ FIRST_ELEMENT = itemgetter(0)
 
 
 def make_charset(letters):
-    return '[' + CS_ESCAPE.sub(lambda m: '\\' + m.group(), ''.join(letters)) + ']'
+    return '[' + CS_ESCAPE.sub(lambda m: f'\\{m.group()}', ''.join(letters)) + ']'
 
 
 def regex_opt_inner(strings, open_paren):
     """Return a regex that matches any string in the sorted list of strings."""
-    close_paren = open_paren and ')' or ''
+    close_paren = ')' if open_paren else ''
     # print strings, repr(open_paren)
     if not strings:
         # print '-> nothing left'
@@ -54,8 +54,7 @@ def regex_opt_inner(strings, open_paren):
                     + make_charset(oneletter) + close_paren
             # print '-> only 1-character'
             return open_paren + make_charset(oneletter) + close_paren
-    prefix = commonprefix(strings)
-    if prefix:
+    if prefix := commonprefix(strings):
         plen = len(prefix)
         # we have a prefix for all strings
         # print '-> prefix:', prefix
@@ -64,8 +63,7 @@ def regex_opt_inner(strings, open_paren):
             + close_paren
     # is there a suffix?
     strings_rev = [s[::-1] for s in strings]
-    suffix = commonprefix(strings_rev)
-    if suffix:
+    if suffix := commonprefix(strings_rev):
         slen = len(suffix)
         # print '-> suffix:', suffix[::-1]
         return open_paren \

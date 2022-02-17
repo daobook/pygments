@@ -8,6 +8,7 @@
     :license: BSD, see LICENSE for details.
 """
 
+
 import re
 
 from pygments.lexer import RegexLexer, bygroups, default
@@ -15,6 +16,8 @@ from pygments.token import Keyword, Punctuation, String, Number, Operator, Gener
     Whitespace, Name, Literal, Comment, Text
 
 __all__ = ['SparqlLexer', 'TurtleLexer', 'ShExCLexer']
+
+
 
 
 class SparqlLexer(RegexLexer):
@@ -43,7 +46,7 @@ class SparqlLexer(RegexLexer):
                          '\uf900-\ufdcf'
                          '\ufdf0-\ufffd')
 
-    PN_CHARS_U_GRP = (PN_CHARS_BASE_GRP + '_')
+    PN_CHARS_U_GRP = f'{PN_CHARS_BASE_GRP}_'
 
     PN_CHARS_GRP = (PN_CHARS_U_GRP +
                     r'\-' +
@@ -58,35 +61,63 @@ class SparqlLexer(RegexLexer):
 
     # terminal productions ::
 
-    PN_CHARS_BASE = '[' + PN_CHARS_BASE_GRP + ']'
+    PN_CHARS_BASE = f'[{PN_CHARS_BASE_GRP}]'
 
-    PN_CHARS_U = '[' + PN_CHARS_U_GRP + ']'
+    PN_CHARS_U = f'[{PN_CHARS_U_GRP}]'
 
-    PN_CHARS = '[' + PN_CHARS_GRP + ']'
+    PN_CHARS = f'[{PN_CHARS_GRP}]'
 
-    HEX = '[' + HEX_GRP + ']'
+    HEX = f'[{HEX_GRP}]'
 
-    PN_LOCAL_ESC_CHARS = '[' + PN_LOCAL_ESC_CHARS_GRP + ']'
+    PN_LOCAL_ESC_CHARS = f'[{PN_LOCAL_ESC_CHARS_GRP}]'
 
     IRIREF = r'<(?:[^<>"{}|^`\\\x00-\x20])*>'
 
-    BLANK_NODE_LABEL = '_:[0-9' + PN_CHARS_U_GRP + '](?:[' + PN_CHARS_GRP + \
-                       '.]*' + PN_CHARS + ')?'
+    BLANK_NODE_LABEL = (
+        (f'_:[0-9{PN_CHARS_U_GRP}](?:[{PN_CHARS_GRP}' + '.]*') + PN_CHARS
+    ) + ')?'
 
-    PN_PREFIX = PN_CHARS_BASE + '(?:[' + PN_CHARS_GRP + '.]*' + PN_CHARS + ')?'
 
-    VARNAME = '[0-9' + PN_CHARS_U_GRP + '][' + PN_CHARS_U_GRP + \
-              '0-9\u00b7\u0300-\u036f\u203f-\u2040]*'
+    PN_PREFIX = f'{PN_CHARS_BASE}(?:[{PN_CHARS_GRP}.]*{PN_CHARS})?'
 
-    PERCENT = '%' + HEX + HEX
+    VARNAME = (
+        f'[0-9{PN_CHARS_U_GRP}][{PN_CHARS_U_GRP}'
+        + '0-9\u00b7\u0300-\u036f\u203f-\u2040]*'
+    )
 
-    PN_LOCAL_ESC = r'\\' + PN_LOCAL_ESC_CHARS
 
-    PLX = '(?:' + PERCENT + ')|(?:' + PN_LOCAL_ESC + ')'
+    PERCENT = f'%{HEX}{HEX}'
 
-    PN_LOCAL = ('(?:[' + PN_CHARS_U_GRP + ':0-9' + ']|' + PLX + ')' +
-                '(?:(?:[' + PN_CHARS_GRP + '.:]|' + PLX + ')*(?:[' +
-                PN_CHARS_GRP + ':]|' + PLX + '))?')
+    PN_LOCAL_ESC = f'\\\\{PN_LOCAL_ESC_CHARS}'
+
+    PLX = f'(?:{PERCENT})|(?:{PN_LOCAL_ESC})'
+
+    PN_LOCAL = (
+        (
+            (
+                (
+                    (
+                        (
+                            (
+                                (
+                                    f'(?:[{PN_CHARS_U_GRP}:0-9]|{PLX})'
+                                    + '(?:(?:['
+                                )
+                                + PN_CHARS_GRP
+                            )
+                            + '.:]|'
+                        )
+                        + PLX
+                    )
+                    + ')*(?:['
+                )
+                + PN_CHARS_GRP
+            )
+            + ':]|'
+        )
+        + PLX
+    ) + '))?'
+
 
     EXPONENT = r'[eE][+-]?\d+'
 
@@ -95,47 +126,43 @@ class SparqlLexer(RegexLexer):
     tokens = {
         'root': [
             (r'\s+', Text),
-            # keywords ::
-            (r'(?i)(select|construct|describe|ask|where|filter|group\s+by|minus|'
-             r'distinct|reduced|from\s+named|from|order\s+by|desc|asc|limit|'
-             r'offset|values|bindings|load|into|clear|drop|create|add|move|copy|'
-             r'insert\s+data|delete\s+data|delete\s+where|with|delete|insert|'
-             r'using\s+named|using|graph|default|named|all|optional|service|'
-             r'silent|bind|undef|union|not\s+in|in|as|having|to|prefix|base)\b', Keyword),
+            (
+                r'(?i)(select|construct|describe|ask|where|filter|group\s+by|minus|'
+                r'distinct|reduced|from\s+named|from|order\s+by|desc|asc|limit|'
+                r'offset|values|bindings|load|into|clear|drop|create|add|move|copy|'
+                r'insert\s+data|delete\s+data|delete\s+where|with|delete|insert|'
+                r'using\s+named|using|graph|default|named|all|optional|service|'
+                r'silent|bind|undef|union|not\s+in|in|as|having|to|prefix|base)\b',
+                Keyword,
+            ),
             (r'(a)\b', Keyword),
-            # IRIs ::
-            ('(' + IRIREF + ')', Name.Label),
-            # blank nodes ::
-            ('(' + BLANK_NODE_LABEL + ')', Name.Label),
-            #  # variables ::
-            ('[?$]' + VARNAME, Name.Variable),
-            # prefixed names ::
-            (r'(' + PN_PREFIX + r')?(\:)(' + PN_LOCAL + r')?',
-             bygroups(Name.Namespace, Punctuation, Name.Tag)),
-            # function names ::
-            (r'(?i)(str|lang|langmatches|datatype|bound|iri|uri|bnode|rand|abs|'
-             r'ceil|floor|round|concat|strlen|ucase|lcase|encode_for_uri|'
-             r'contains|strstarts|strends|strbefore|strafter|year|month|day|'
-             r'hours|minutes|seconds|timezone|tz|now|uuid|struuid|md5|sha1|sha256|sha384|'
-             r'sha512|coalesce|if|strlang|strdt|sameterm|isiri|isuri|isblank|'
-             r'isliteral|isnumeric|regex|substr|replace|exists|not\s+exists|'
-             r'count|sum|min|max|avg|sample|group_concat|separator)\b',
-             Name.Function),
-            # boolean literals ::
+            (f'({IRIREF})', Name.Label),
+            (f'({BLANK_NODE_LABEL})', Name.Label),
+            (f'[?$]{VARNAME}', Name.Variable),
+            (
+                f'({PN_PREFIX})?(\\:)({PN_LOCAL})?',
+                bygroups(Name.Namespace, Punctuation, Name.Tag),
+            ),
+            (
+                r'(?i)(str|lang|langmatches|datatype|bound|iri|uri|bnode|rand|abs|'
+                r'ceil|floor|round|concat|strlen|ucase|lcase|encode_for_uri|'
+                r'contains|strstarts|strends|strbefore|strafter|year|month|day|'
+                r'hours|minutes|seconds|timezone|tz|now|uuid|struuid|md5|sha1|sha256|sha384|'
+                r'sha512|coalesce|if|strlang|strdt|sameterm|isiri|isuri|isblank|'
+                r'isliteral|isnumeric|regex|substr|replace|exists|not\s+exists|'
+                r'count|sum|min|max|avg|sample|group_concat|separator)\b',
+                Name.Function,
+            ),
             (r'(true|false)', Keyword.Constant),
-            # double literals ::
-            (r'[+\-]?(\d+\.\d*' + EXPONENT + r'|\.?\d+' + EXPONENT + ')', Number.Float),
-            # decimal literals ::
+            (
+                f'[+\\-]?(\\d+\\.\\d*{EXPONENT}|\\.?\\d+{EXPONENT})',
+                Number.Float,
+            ),
             (r'[+\-]?(\d+\.\d*|\.\d+)', Number.Float),
-            # integer literals ::
             (r'[+\-]?\d+', Number.Integer),
-            # operators ::
             (r'(\|\||&&|=|\*|\-|\+|/|!=|<=|>=|!|<|>)', Operator),
-            # punctuation characters ::
             (r'[(){}.;,:^\[\]]', Punctuation),
-            # line comments ::
             (r'#[^\n]*', Comment),
-            # strings ::
             (r'"""', String, 'triple-double-quoted-string'),
             (r'"', String, 'single-double-quoted-string'),
             (r"'''", String, 'triple-single-quoted-string'),
@@ -162,13 +189,16 @@ class SparqlLexer(RegexLexer):
             (r'\\', String, 'string-escape'),
         ],
         'string-escape': [
-            (r'u' + HEX + '{4}', String.Escape, '#pop'),
-            (r'U' + HEX + '{8}', String.Escape, '#pop'),
+            (f'u{HEX}' + '{4}', String.Escape, '#pop'),
+            (f'U{HEX}' + '{8}', String.Escape, '#pop'),
             (r'.', String.Escape, '#pop'),
         ],
         'end-of-string': [
-            (r'(@)([a-zA-Z]+(?:-[a-zA-Z0-9]+)*)',
-             bygroups(Operator, Name.Function), '#pop:2'),
+            (
+                r'(@)([a-zA-Z]+(?:-[a-zA-Z0-9]+)*)',
+                bygroups(Operator, Name.Function),
+                '#pop:2',
+            ),
             (r'\^\^', Operator, '#pop:2'),
             default('#pop:2'),
         ],
@@ -340,7 +370,7 @@ class ShExCLexer(RegexLexer):
                          '\uf900-\ufdcf'
                          '\ufdf0-\ufffd')
 
-    PN_CHARS_U_GRP = (PN_CHARS_BASE_GRP + '_')
+    PN_CHARS_U_GRP = f'{PN_CHARS_BASE_GRP}_'
 
     PN_CHARS_GRP = (PN_CHARS_U_GRP +
                     r'\-' +
@@ -355,36 +385,61 @@ class ShExCLexer(RegexLexer):
 
     # terminal productions ::
 
-    PN_CHARS_BASE = '[' + PN_CHARS_BASE_GRP + ']'
+    PN_CHARS_BASE = f'[{PN_CHARS_BASE_GRP}]'
 
-    PN_CHARS_U = '[' + PN_CHARS_U_GRP + ']'
+    PN_CHARS_U = f'[{PN_CHARS_U_GRP}]'
 
-    PN_CHARS = '[' + PN_CHARS_GRP + ']'
+    PN_CHARS = f'[{PN_CHARS_GRP}]'
 
-    HEX = '[' + HEX_GRP + ']'
+    HEX = f'[{HEX_GRP}]'
 
-    PN_LOCAL_ESC_CHARS = '[' + PN_LOCAL_ESC_CHARS_GRP + ']'
+    PN_LOCAL_ESC_CHARS = f'[{PN_LOCAL_ESC_CHARS_GRP}]'
 
-    UCHAR_NO_BACKSLASH = '(?:u' + HEX + '{4}|U' + HEX + '{8})'
+    UCHAR_NO_BACKSLASH = f'(?:u{HEX}' + '{4}|U' + HEX + '{8})'
 
-    UCHAR = r'\\' + UCHAR_NO_BACKSLASH
+    UCHAR = f'\\\\{UCHAR_NO_BACKSLASH}'
 
     IRIREF = r'<(?:[^\x00-\x20<>"{}|^`\\]|' + UCHAR + ')*>'
 
-    BLANK_NODE_LABEL = '_:[0-9' + PN_CHARS_U_GRP + '](?:[' + PN_CHARS_GRP + \
-                       '.]*' + PN_CHARS + ')?'
+    BLANK_NODE_LABEL = (
+        (f'_:[0-9{PN_CHARS_U_GRP}](?:[{PN_CHARS_GRP}' + '.]*') + PN_CHARS
+    ) + ')?'
 
-    PN_PREFIX = PN_CHARS_BASE + '(?:[' + PN_CHARS_GRP + '.]*' + PN_CHARS + ')?'
 
-    PERCENT = '%' + HEX + HEX
+    PN_PREFIX = f'{PN_CHARS_BASE}(?:[{PN_CHARS_GRP}.]*{PN_CHARS})?'
 
-    PN_LOCAL_ESC = r'\\' + PN_LOCAL_ESC_CHARS
+    PERCENT = f'%{HEX}{HEX}'
 
-    PLX = '(?:' + PERCENT + ')|(?:' + PN_LOCAL_ESC + ')'
+    PN_LOCAL_ESC = f'\\\\{PN_LOCAL_ESC_CHARS}'
 
-    PN_LOCAL = ('(?:[' + PN_CHARS_U_GRP + ':0-9' + ']|' + PLX + ')' +
-                '(?:(?:[' + PN_CHARS_GRP + '.:]|' + PLX + ')*(?:[' +
-                PN_CHARS_GRP + ':]|' + PLX + '))?')
+    PLX = f'(?:{PERCENT})|(?:{PN_LOCAL_ESC})'
+
+    PN_LOCAL = (
+        (
+            (
+                (
+                    (
+                        (
+                            (
+                                (
+                                    f'(?:[{PN_CHARS_U_GRP}:0-9]|{PLX})'
+                                    + '(?:(?:['
+                                )
+                                + PN_CHARS_GRP
+                            )
+                            + '.:]|'
+                        )
+                        + PLX
+                    )
+                    + ')*(?:['
+                )
+                + PN_CHARS_GRP
+            )
+            + ':]|'
+        )
+        + PLX
+    ) + '))?'
+
 
     EXPONENT = r'[eE][+-]?\d+'
 
@@ -393,37 +448,32 @@ class ShExCLexer(RegexLexer):
     tokens = {
         'root': [
             (r'\s+', Text),
-            # keywords ::
-            (r'(?i)(base|prefix|start|external|'
-             r'literal|iri|bnode|nonliteral|length|minlength|maxlength|'
-             r'mininclusive|minexclusive|maxinclusive|maxexclusive|'
-             r'totaldigits|fractiondigits|'
-             r'closed|extra)\b', Keyword),
+            (
+                r'(?i)(base|prefix|start|external|'
+                r'literal|iri|bnode|nonliteral|length|minlength|maxlength|'
+                r'mininclusive|minexclusive|maxinclusive|maxexclusive|'
+                r'totaldigits|fractiondigits|'
+                r'closed|extra)\b',
+                Keyword,
+            ),
             (r'(a)\b', Keyword),
-            # IRIs ::
-            ('(' + IRIREF + ')', Name.Label),
-            # blank nodes ::
-            ('(' + BLANK_NODE_LABEL + ')', Name.Label),
-            # prefixed names ::
-            (r'(' + PN_PREFIX + r')?(\:)(' + PN_LOCAL + ')?',
-             bygroups(Name.Namespace, Punctuation, Name.Tag)),
-            # boolean literals ::
+            (f'({IRIREF})', Name.Label),
+            (f'({BLANK_NODE_LABEL})', Name.Label),
+            (
+                f'({PN_PREFIX})?(\\:)({PN_LOCAL})?',
+                bygroups(Name.Namespace, Punctuation, Name.Tag),
+            ),
             (r'(true|false)', Keyword.Constant),
-            # double literals ::
-            (r'[+\-]?(\d+\.\d*' + EXPONENT + r'|\.?\d+' + EXPONENT + ')', Number.Float),
-            # decimal literals ::
+            (
+                f'[+\\-]?(\\d+\\.\\d*{EXPONENT}|\\.?\\d+{EXPONENT})',
+                Number.Float,
+            ),
             (r'[+\-]?(\d+\.\d*|\.\d+)', Number.Float),
-            # integer literals ::
             (r'[+\-]?\d+', Number.Integer),
-            # operators ::
             (r'[@|$&=*+?^\-~]', Operator),
-            # operator keywords ::
             (r'(?i)(and|or|not)\b', Operator.Word),
-            # punctuation characters ::
             (r'[(){}.;,:^\[\]]', Punctuation),
-            # line comments ::
             (r'#[^\n]*', Comment),
-            # strings ::
             (r'"""', String, 'triple-double-quoted-string'),
             (r'"', String, 'single-double-quoted-string'),
             (r"'''", String, 'triple-single-quoted-string'),
@@ -454,8 +504,11 @@ class ShExCLexer(RegexLexer):
             (r'.', String.Escape, '#pop'),
         ],
         'end-of-string': [
-            (r'(@)([a-zA-Z]+(?:-[a-zA-Z0-9]+)*)',
-             bygroups(Operator, Name.Function), '#pop:2'),
+            (
+                r'(@)([a-zA-Z]+(?:-[a-zA-Z0-9]+)*)',
+                bygroups(Operator, Name.Function),
+                '#pop:2',
+            ),
             (r'\^\^', Operator, '#pop:2'),
             default('#pop:2'),
         ],

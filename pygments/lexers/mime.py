@@ -67,7 +67,7 @@ class MIMELexer(RegexLexer):
         field = match.group(1)
 
         if field.lower() in self.attention_headers:
-            yield match.start(1), Name.Tag, field + ":"
+            yield (match.start(1), Name.Tag, f'{field}:')
             yield match.start(2), Text.Whitespace, match.group(2)
 
             pos = match.end(2)
@@ -98,9 +98,7 @@ class MIMELexer(RegexLexer):
         bdry_pattern = r"^--%s(--)?\n" % re.escape(self.boundary)
         bdry_matcher = re.compile(bdry_pattern, re.MULTILINE)
 
-        # some data has prefix text before first boundary
-        m = bdry_matcher.search(entire_body)
-        if m:
+        if m := bdry_matcher.search(entire_body):
             pos_part_start = pos_body_start + m.end()
             pos_iter_start = lpos_end = m.end()
             yield pos_body_start, Text, entire_body[:m.start()]

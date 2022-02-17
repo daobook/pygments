@@ -115,14 +115,12 @@ class SourcePawnLexer(RegexLexer):
         RegexLexer.__init__(self, **options)
 
     def get_tokens_unprocessed(self, text):
-        for index, token, value in \
-                RegexLexer.get_tokens_unprocessed(self, text):
-            if token is Name:
-                if self.smhighlighting:
-                    if value in self.SM_TYPES:
-                        token = Keyword.Type
-                    elif value in self._functions:
-                        token = Name.Builtin
+        for index, token, value in RegexLexer.get_tokens_unprocessed(self, text):
+            if token is Name and self.smhighlighting:
+                if value in self.SM_TYPES:
+                    token = Keyword.Type
+                elif value in self._functions:
+                    token = Name.Builtin
             yield index, token, value
 
 

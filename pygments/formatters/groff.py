@@ -64,7 +64,7 @@ class GroffFormatter(Formatter):
             start = end = ''
             if ndef['color']:
                 start += '\\m[%s]' % ndef['color']
-                end = '\\m[]' + end
+                end = f'\\m[]{end}'
             if ndef['bold']:
                 start += bold
                 end = regular + end
@@ -73,19 +73,15 @@ class GroffFormatter(Formatter):
                 end = regular + end
             if ndef['bgcolor']:
                 start += '\\M[%s]' % ndef['bgcolor']
-                end = '\\M[]' + end
+                end = f'\\M[]{end}'
 
             self.styles[ttype] = start, end
 
 
     def _define_colors(self, outfile):
-        colors = set()
-        for _, ndef in self.style:
-            if ndef['color'] is not None:
-                colors.add(ndef['color'])
-
+        colors = {ndef['color'] for _, ndef in self.style if ndef['color'] is not None}
         for color in colors:
-            outfile.write('.defcolor ' + color + ' rgb #' + color + '\n')
+            outfile.write(f'.defcolor {color} rgb #{color}' + '\n')
 
 
     def _write_lineno(self, outfile):
@@ -99,7 +95,7 @@ class GroffFormatter(Formatter):
         newline = ''
 
         if length > self.wrap:
-            for i in range(0, math.floor(length / self.wrap)):
+            for i in range(math.floor(length / self.wrap)):
                 chunk = line[i*self.wrap:i*self.wrap+self.wrap]
                 newline += (chunk + '\n' + space)
             remainder = length % self.wrap
@@ -130,7 +126,7 @@ class GroffFormatter(Formatter):
                     .decode()[1:] \
                     .replace('x', 'u00') \
                     .upper()
-                text = text.replace(char, '\\[u' + uni[1:] + ']')
+                text = text.replace(char, f'\\[u{uni[1:]}]')
 
         return text
 
@@ -160,9 +156,7 @@ class GroffFormatter(Formatter):
                 if line.endswith('\n'):
                     if self.linenos:
                         self._write_lineno(outfile)
-                        self._linelen = 0
                     else:
                         outfile.write('\n')
-                        self._linelen = 0
-
+                    self._linelen = 0
         outfile.write('\n.fi')

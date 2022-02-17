@@ -181,7 +181,7 @@ def find_lexer_class_for_filename(_fn, code=None):
     def get_rating(info):
         cls, filename = info
         # explicit patterns get a bonus
-        bonus = '*' not in filename and 0.5 or 0
+        bonus = 0.5 if '*' not in filename else 0
         # The class _always_ defines analyse_text because it's included in
         # the Lexer class.  The default implementation returns None which
         # gets turned into 0.0.  Run scripts/detect_missing_analyse_text.py
@@ -292,8 +292,7 @@ def guess_lexer(_text, **options):
     """Guess a lexer by strong distinctions in the text (eg, shebang)."""
 
     if not isinstance(_text, str):
-        inencoding = options.get('inencoding', options.get('encoding'))
-        if inencoding:
+        if inencoding := options.get('inencoding', options.get('encoding')):
             _text = _text.decode(inencoding or 'utf8')
         else:
             _text, _ = guess_decode(_text)
@@ -323,8 +322,7 @@ class _automodule(types.ModuleType):
     """Automatically import lexers."""
 
     def __getattr__(self, name):
-        info = LEXERS.get(name)
-        if info:
+        if info := LEXERS.get(name):
             _load_lexers(info[0])
             cls = _lexer_cache[info[1]]
             setattr(self, name, cls)

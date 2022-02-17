@@ -492,12 +492,27 @@ class Perl6Lexer(ExtendedRegexLexer):
 
     def _build_word_match(words, boundary_regex_fragment=None, prefix='', suffix=''):
         if boundary_regex_fragment is None:
-            return r'\b(' + prefix + r'|'.join(re.escape(x) for x in words) + \
-                suffix + r')\b'
+            return (
+                f'\\b({prefix}' + r'|'.join(re.escape(x) for x in words) + suffix
+            ) + r')\b'
+
         else:
-            return r'(?<!' + boundary_regex_fragment + r')' + prefix + r'(' + \
-                r'|'.join(re.escape(x) for x in words) + r')' + suffix + r'(?!' + \
-                boundary_regex_fragment + r')'
+            return (
+                (
+                    (
+                        (
+                            (
+                                f'(?<!{boundary_regex_fragment}){prefix}('
+                                + r'|'.join(re.escape(x) for x in words)
+                            )
+                            + r')'
+                        )
+                        + suffix
+                    )
+                    + r'(?!'
+                )
+                + boundary_regex_fragment
+            ) + r')'
 
     def brackets_callback(token_class):
         def callback(lexer, match, context):
@@ -542,10 +557,11 @@ class Perl6Lexer(ExtendedRegexLexer):
 
             if adverbs is not None and re.search(r':to\b', adverbs):
                 heredoc_terminator = text[match.start('delimiter') + n_chars:end_pos]
-                end_heredoc = re.search(r'^\s*' + re.escape(heredoc_terminator) +
-                                        r'\s*$', text[end_pos:], re.MULTILINE)
-
-                if end_heredoc:
+                if end_heredoc := re.search(
+                    (f'^\\s*{re.escape(heredoc_terminator)}' + r'\s*$'),
+                    text[end_pos:],
+                    re.MULTILINE,
+                ):
                     end_pos += end_heredoc.end()
                 else:
                     end_pos = len(text)

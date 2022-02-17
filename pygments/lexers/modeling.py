@@ -185,10 +185,7 @@ class BugsLexer(RegexLexer):
     }
 
     def analyse_text(text):
-        if re.search(r"^\s*model\s*{", text, re.M):
-            return 0.7
-        else:
-            return 0.0
+        return 0.7 if re.search(r"^\s*model\s*{", text, re.M) else 0.0
 
 
 class JagsLexer(RegexLexer):
@@ -268,15 +265,14 @@ class JagsLexer(RegexLexer):
     }
 
     def analyse_text(text):
-        if re.search(r'^\s*model\s*\{', text, re.M):
-            if re.search(r'^\s*data\s*\{', text, re.M):
-                return 0.9
-            elif re.search(r'^\s*var', text, re.M):
-                return 0.9
-            else:
-                return 0.3
-        else:
+        if not re.search(r'^\s*model\s*\{', text, re.M):
             return 0
+        if re.search(r'^\s*data\s*\{', text, re.M):
+            return 0.9
+        elif re.search(r'^\s*var', text, re.M):
+            return 0.9
+        else:
+            return 0.3
 
 
 class StanLexer(RegexLexer):
@@ -359,7 +355,4 @@ class StanLexer(RegexLexer):
     }
 
     def analyse_text(text):
-        if re.search(r'^\s*parameters\s*\{', text, re.M):
-            return 1.0
-        else:
-            return 0.0
+        return 1.0 if re.search(r'^\s*parameters\s*\{', text, re.M) else 0.0

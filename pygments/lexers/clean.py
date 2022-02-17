@@ -8,11 +8,14 @@
     :license: BSD, see LICENSE for details.
 """
 
+
 from pygments.lexer import ExtendedRegexLexer, words, default, include, bygroups
 from pygments.token import Comment, Error, Keyword, Literal, Name, Number, \
     Operator, Punctuation, String, Whitespace
 
 __all__ = ['CleanLexer']
+
+
 
 
 class CleanLexer(ExtendedRegexLexer):
@@ -37,8 +40,8 @@ class CleanLexer(ExtendedRegexLexer):
     lowerId = r'[a-z`][\w`]*'
     upperId = r'[A-Z`][\w`]*'
     funnyId = r'[~@#$%\^?!+\-*<>\\/|&=:]+'
-    scoreUpperId = r'_' + upperId
-    scoreLowerId = r'_' + lowerId
+    scoreUpperId = f'_{upperId}'
+    scoreLowerId = f'_{lowerId}'
     moduleId = r'[a-zA-Z_][a-zA-Z0-9_.`]+'
     classId = '|'.join([lowerId, upperId, funnyId])
 
@@ -73,7 +76,10 @@ class CleanLexer(ExtendedRegexLexer):
             (words(keywords, prefix=r'\b', suffix=r'\b'), Keyword),
         ],
         'module': [
-            (words(modulewords, prefix=r'\b', suffix=r'\b'), Keyword.Namespace),
+            (
+                words(modulewords, prefix=r'\b', suffix=r'\b'),
+                Keyword.Namespace,
+            ),
             (r'\bmodule\b', Keyword.Namespace, 'module.name'),
         ],
         'module.name': [
@@ -81,14 +87,24 @@ class CleanLexer(ExtendedRegexLexer):
             (moduleId, Name.Class, '#pop'),
         ],
         'import': [
-            (r'\b(import)\b(\s*)', bygroups(Keyword, Whitespace), 'import.module'),
-            (r'\b(from)\b(\s*)\b(' + moduleId + r')\b(\s*)\b(import)\b',
+            (
+                r'\b(import)\b(\s*)',
+                bygroups(Keyword, Whitespace),
+                'import.module',
+            ),
+            (
+                f'\\b(from)\\b(\\s*)\\b({moduleId})\\b(\\s*)\\b(import)\\b',
                 bygroups(Keyword, Whitespace, Name.Class, Whitespace, Keyword),
-                'import.what'),
+                'import.what',
+            ),
         ],
         'import.module': [
             (r'\b(qualified)\b(\s*)', bygroups(Keyword, Whitespace)),
-            (r'(\s*)\b(as)\b', bygroups(Whitespace, Keyword), ('#pop', 'import.module.as')),
+            (
+                r'(\s*)\b(as)\b',
+                bygroups(Whitespace, Keyword),
+                ('#pop', 'import.module.as'),
+            ),
             (moduleId, Name.Class),
             (r'(\s*)(,)(\s*)', bygroups(Whitespace, Punctuation, Whitespace)),
             (r'\s+', Whitespace),
@@ -100,14 +116,25 @@ class CleanLexer(ExtendedRegexLexer):
             (upperId, Name.Class, '#pop'),
         ],
         'import.what': [
-            (r'\b(class)\b(\s+)(' + classId + r')',
-                bygroups(Keyword, Whitespace, Name.Class), 'import.what.class'),
-            (r'\b(instance)(\s+)(' + classId + r')(\s+)',
-                bygroups(Keyword, Whitespace, Name.Class, Whitespace), 'import.what.instance'),
-            (r'(::)(\s*)\b(' + upperId + r')\b',
-                bygroups(Punctuation, Whitespace, Name.Class), 'import.what.type'),
-            (r'\b(generic)\b(\s+)\b(' + lowerId + '|' + upperId + r')\b',
-                bygroups(Keyword, Whitespace, Name)),
+            (
+                f'\\b(class)\\b(\\s+)({classId})',
+                bygroups(Keyword, Whitespace, Name.Class),
+                'import.what.class',
+            ),
+            (
+                f'\\b(instance)(\\s+)({classId})(\\s+)',
+                bygroups(Keyword, Whitespace, Name.Class, Whitespace),
+                'import.what.instance',
+            ),
+            (
+                f'(::)(\\s*)\\b({upperId})\\b',
+                bygroups(Punctuation, Whitespace, Name.Class),
+                'import.what.type',
+            ),
+            (
+                f'\\b(generic)\\b(\\s+)\\b({lowerId}|{upperId})\\b',
+                bygroups(Keyword, Whitespace, Name),
+            ),
             include('names'),
             (r'(,)(\s+)', bygroups(Punctuation, Whitespace)),
             (r'$', Whitespace, '#pop'),
@@ -165,8 +192,10 @@ class CleanLexer(ExtendedRegexLexer):
         ],
         'delimiters': [
             (r'[,;(){}\[\]]', Punctuation),
-            (r'(\')([\w`.]+)(\')',
-                bygroups(Punctuation, Name.Class, Punctuation)),
+            (
+                r'(\')([\w`.]+)(\')',
+                bygroups(Punctuation, Name.Class, Punctuation),
+            ),
         ],
         'names': [
             (lowerId, Name),
@@ -174,5 +203,5 @@ class CleanLexer(ExtendedRegexLexer):
             (funnyId, Name.Function),
             (upperId, Name.Class),
             (scoreUpperId, Name.Class),
-        ]
+        ],
     }

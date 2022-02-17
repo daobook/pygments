@@ -68,10 +68,7 @@ class CrystalLexer(ExtendedRegexLexer):
             for tolerant, hdname in heredocstack:
                 lines = []
                 for match in line_re.finditer(ctx.text, ctx.pos):
-                    if tolerant:
-                        check = match.group().strip()
-                    else:
-                        check = match.group().rstrip()
+                    check = match.group().strip() if tolerant else match.group().rstrip()
                     if check == hdname:
                         for amatch in lines:
                             yield amatch.start(), String.Heredoc, amatch.group()
@@ -88,25 +85,24 @@ class CrystalLexer(ExtendedRegexLexer):
             del heredocstack[:]
 
     def gen_crystalstrings_rules():
-        states = {}
-        states['strings'] = [
-            (r'\:\w+[!?]?', String.Symbol),
-            (words(CRYSTAL_OPERATORS, prefix=r'\:'), String.Symbol),
-            (r":'(\\\\|\\[^\\]|[^'\\])*'", String.Symbol),
-            # This allows arbitrary text after '\ for simplicity
-            (r"'(\\\\|\\'|[^']|\\[^'\\]+)'", String.Char),
-            (r':"', String.Symbol, 'simple-sym'),
-            # Crystal doesn't have "symbol:"s but this simplifies function args
-            (r'([a-zA-Z_]\w*)(:)(?!:)', bygroups(String.Symbol, Punctuation)),
-            (r'"', String.Double, 'simple-string'),
-            (r'(?<!\.)`', String.Backtick, 'simple-backtick'),
-        ]
+        states = {
+            'strings': [
+                (r'\:\w+[!?]?', String.Symbol),
+                (words(CRYSTAL_OPERATORS, prefix=r'\:'), String.Symbol),
+                (r":'(\\\\|\\[^\\]|[^'\\])*'", String.Symbol),
+                (r"'(\\\\|\\'|[^']|\\[^'\\]+)'", String.Char),
+                (r':"', String.Symbol, 'simple-sym'),
+                (r'([a-zA-Z_]\w*)(:)(?!:)', bygroups(String.Symbol, Punctuation)),
+                (r'"', String.Double, 'simple-string'),
+                (r'(?<!\.)`', String.Backtick, 'simple-backtick'),
+            ]
+        }
 
         # double-quoted string and symbol
         for name, ttype, end in ('string', String.Double, '"'), \
                                 ('sym', String.Symbol, '"'), \
                                 ('backtick', String.Backtick, '`'):
-            states['simple-'+name] = [
+            states[f'simple-{name}'] = [
                 include('string-escaped' if name == 'sym' else 'string-intp-escaped'),
                 (r'[^\\%s#]+' % end, ttype),
                 (r'[\\#]', ttype),
@@ -114,48 +110,53 @@ class CrystalLexer(ExtendedRegexLexer):
             ]
 
         # https://crystal-lang.org/docs/syntax_and_semantics/literals/string.html#percent-string-literals
-        for lbrace, rbrace, bracecc, name in \
-                ('\\{', '\\}', '{}', 'cb'), \
+        for lbrace, rbrace, bracecc, name in ('\\{', '\\}', '{}', 'cb'), \
                 ('\\[', '\\]', '\\[\\]', 'sb'), \
                 ('\\(', '\\)', '()', 'pa'), \
                 ('<', '>', '<>', 'ab'), \
                 ('\\|', '\\|', '\\|', 'pi'):
-            states[name+'-intp-string'] = [
-                (r'\\' + lbrace, String.Other),
-            ] + (lbrace != rbrace) * [
-                (lbrace, String.Other, '#push'),
-            ] + [
+            states[f'{name}-intp-string'] = (
+                [(f'\\\\{lbrace}', String.Other)]
+                + (lbrace != rbrace)
+                * [
+                    (lbrace, String.Other, '#push'),
+                ]
+            ) + [
                 (rbrace, String.Other, '#pop'),
                 include('string-intp-escaped'),
-                (r'[\\#' + bracecc + ']', String.Other),
-                (r'[^\\#' + bracecc + ']+', String.Other),
+                (f'[\\\\#{bracecc}]', String.Other),
+                (f'[^\\\\#{bracecc}]+', String.Other),
             ]
-            states['strings'].append((r'%Q?' + lbrace, String.Other,
-                                      name+'-intp-string'))
-            states[name+'-string'] = [
-                (r'\\[\\' + bracecc + ']', String.Other),
-            ] + (lbrace != rbrace) * [
-                (lbrace, String.Other, '#push'),
-            ] + [
+
+            states['strings'].append((f'%Q?{lbrace}', String.Other, f'{name}-intp-string'))
+            states[f'{name}-string'] = (
+                [(f'\\\\[\\\\{bracecc}]', String.Other)]
+                + (lbrace != rbrace)
+                * [
+                    (lbrace, String.Other, '#push'),
+                ]
+            ) + [
                 (rbrace, String.Other, '#pop'),
-                (r'[\\#' + bracecc + ']', String.Other),
-                (r'[^\\#' + bracecc + ']+', String.Other),
+                (f'[\\\\#{bracecc}]', String.Other),
+                (f'[^\\\\#{bracecc}]+', String.Other),
             ]
+
             # https://crystal-lang.org/docs/syntax_and_semantics/literals/array.html#percent-array-literals
-            states['strings'].append((r'%[qwi]' + lbrace, String.Other,
-                                      name+'-string'))
-            states[name+'-regex'] = [
-                (r'\\[\\' + bracecc + ']', String.Regex),
-            ] + (lbrace != rbrace) * [
-                (lbrace, String.Regex, '#push'),
-            ] + [
-                (rbrace + '[imsx]*', String.Regex, '#pop'),
+            states['strings'].append((f'%[qwi]{lbrace}', String.Other, f'{name}-string'))
+            states[f'{name}-regex'] = (
+                [(f'\\\\[\\\\{bracecc}]', String.Regex)]
+                + (lbrace != rbrace)
+                * [
+                    (lbrace, String.Regex, '#push'),
+                ]
+            ) + [
+                (f'{rbrace}[imsx]*', String.Regex, '#pop'),
                 include('string-intp'),
-                (r'[\\#' + bracecc + ']', String.Regex),
-                (r'[^\\#' + bracecc + ']+', String.Regex),
+                (f'[\\\\#{bracecc}]', String.Regex),
+                (f'[^\\\\#{bracecc}]+', String.Regex),
             ]
-            states['strings'].append((r'%r' + lbrace, String.Regex,
-                                      name+'-regex'))
+
+            states['strings'].append((f'%r{lbrace}', String.Regex, f'{name}-regex'))
 
         return states
 

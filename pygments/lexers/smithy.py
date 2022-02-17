@@ -8,6 +8,7 @@
     :license: BSD, see LICENSE for details.
 """
 
+
 import re
 
 from pygments.lexer import RegexLexer, bygroups, words
@@ -15,6 +16,8 @@ from pygments.token import Text, Comment, Keyword, Name, String, \
     Number, Whitespace, Punctuation
 
 __all__ = ['SmithyLexer']
+
+
 
 
 class SmithyLexer(RegexLexer):
@@ -48,21 +51,35 @@ class SmithyLexer(RegexLexer):
             (r'//.*$', Comment),
             (r'@[0-9a-zA-Z\.#-]*', Name.Decorator),
             (r'(=)', Name.Decorator),
-            (r'^(\$version)(:)(.+)',
-                bygroups(Keyword.Declaration, Name.Decorator, Name.Class)),
-            (r'^(namespace)(\s+' + identifier + r')\b',
-                bygroups(Keyword.Declaration, Name.Class)),
-            (words(simple_shapes,
-                   prefix=r'^', suffix=r'(\s+' + identifier + r')\b'),
-                bygroups(Keyword.Declaration, Name.Class)),
-            (words(aggregate_shapes,
-                   prefix=r'^', suffix=r'(\s+' + identifier + r')'),
-                bygroups(Keyword.Declaration, Name.Class)),
-            (r'^(metadata)(\s+.+)(\s*)(=)',
-                bygroups(Keyword.Declaration, Name.Class, Whitespace, Name.Decorator)),
+            (
+                r'^(\$version)(:)(.+)',
+                bygroups(Keyword.Declaration, Name.Decorator, Name.Class),
+            ),
+            (
+                f'^(namespace)(\\s+{identifier})\\b',
+                bygroups(Keyword.Declaration, Name.Class),
+            ),
+            (
+                words(
+                    simple_shapes, prefix=r'^', suffix=f'(\\s+{identifier})\\b'
+                ),
+                bygroups(Keyword.Declaration, Name.Class),
+            ),
+            (
+                words(
+                    aggregate_shapes, prefix=r'^', suffix=f'(\\s+{identifier})'
+                ),
+                bygroups(Keyword.Declaration, Name.Class),
+            ),
+            (
+                r'^(metadata)(\s+.+)(\s*)(=)',
+                bygroups(
+                    Keyword.Declaration, Name.Class, Whitespace, Name.Decorator
+                ),
+            ),
             (r"(true|false|null)", Keyword.Constant),
             (r"(-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?)", Number),
-            (identifier + ":", Name.Label),
+            (f'{identifier}:', Name.Label),
             (identifier, Name.Variable.Class),
             (r'\[', Text, "#push"),
             (r'\]', Text, "#pop"),

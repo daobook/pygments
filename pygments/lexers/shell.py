@@ -170,8 +170,7 @@ class ShellSessionBaseLexer(Lexer):
         for match in line_re.finditer(text):
             line = match.group()
 
-            venv_match = self._venv.match(line)
-            if venv_match:
+            if venv_match := self._venv.match(line):
                 venv = venv_match.group(1)
                 venv_whitespace = venv_match.group(2)
                 insertions.append((len(curcode),
@@ -181,8 +180,7 @@ class ShellSessionBaseLexer(Lexer):
                         [(0, Text, venv_whitespace)]))
                 line = line[venv_match.end():]
 
-            m = self._ps1rgx.match(line)
-            if m:
+            if m := self._ps1rgx.match(line):
                 # To support output lexers (say diff output), the output
                 # needs to be broken by prompts whenever the output lexer
                 # changes.

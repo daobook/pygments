@@ -4698,8 +4698,7 @@ if __name__ == '__main__':  # pragma: no cover
             with open(file) as f:
                 for line in f:
                     if not module:
-                        search = module_re.search(line)
-                        if search:
+                        if search := module_re.search(line):
                             module = search.group(1)
                             modules[module] = []
 

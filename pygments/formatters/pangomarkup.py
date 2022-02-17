@@ -46,16 +46,16 @@ class PangoMarkupFormatter(Formatter):
             end = ''
             if style['color']:
                 start += '<span fgcolor="#%s">' % style['color']
-                end = '</span>' + end
+                end = f'</span>{end}'
             if style['bold']:
                 start += '<b>'
-                end = '</b>' + end
+                end = f'</b>{end}'
             if style['italic']:
                 start += '<i>'
-                end = '</i>' + end
+                end = f'</i>{end}'
             if style['underline']:
                 start += '<u>'
-                end = '</u>' + end
+                end = f'</u>{end}'
             self.styles[token] = (start, end)
 
     def format_unencoded(self, tokensource, outfile):

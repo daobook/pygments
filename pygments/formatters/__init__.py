@@ -137,8 +137,7 @@ class _automodule(types.ModuleType):
     """Automatically import formatters."""
 
     def __getattr__(self, name):
-        info = FORMATTERS.get(name)
-        if info:
+        if info := FORMATTERS.get(name):
             _load_formatters(info[0])
             cls = _formatter_cache[info[1]]
             setattr(self, name, cls)

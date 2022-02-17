@@ -40,9 +40,7 @@ class EscapeSequence:
         self.italic = italic
 
     def escape(self, attrs):
-        if len(attrs):
-            return "\x1b[" + ";".join(attrs) + "m"
-        return ""
+        return "\x1b[" + ";".join(attrs) + "m" if len(attrs) else ""
 
     def color_string(self):
         attrs = []
@@ -189,7 +187,7 @@ class Terminal256Formatter(Formatter):
         distance = 257*257*3  # "infinity" (>distance from #000000 to #ffffff)
         match = 0
 
-        for i in range(0, 254):
+        for i in range(254):
             values = self.xterm_colors[i]
 
             rd = r - values[0]

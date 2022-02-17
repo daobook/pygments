@@ -8,6 +8,7 @@
     :license: BSD, see LICENSE for details.
 """
 
+
 import re
 
 from pygments.lexer import Lexer, RegexLexer, bygroups, words, do_insertions, \
@@ -20,6 +21,8 @@ __all__ = ['ErlangLexer', 'ErlangShellLexer', 'ElixirConsoleLexer',
 
 
 line_re = re.compile('.*?\n')
+
+
 
 
 class ErlangLexer(RegexLexer):
@@ -85,9 +88,13 @@ class ErlangLexer(RegexLexer):
     esc_octal_re = r'[0-7][0-7]?[0-7]?'
     esc_hex_re = r'(?:x[0-9a-fA-F]{2}|x\{[0-9a-fA-F]+\})'
     esc_ctrl_re = r'\^[a-zA-Z]'
-    escape_re = r'(?:\\(?:'+esc_char_re+r'|'+esc_octal_re+r'|'+esc_hex_re+r'|'+esc_ctrl_re+r'))'
+    escape_re = (
+        f'(?:\\\\(?:{esc_char_re}|{esc_octal_re}|{esc_hex_re}|{esc_ctrl_re}'
+        + r'))'
+    )
 
-    macro_re = r'(?:'+variable_re+r'|'+atom_re+r')'
+
+    macro_re = f'(?:{variable_re}|{atom_re})'
 
     base_re = r'(?:[2-9]|[12][0-9]|3[0-6])'
 
@@ -103,24 +110,21 @@ class ErlangLexer(RegexLexer):
             (r'"', String, 'string'),
             (r'<<', Name.Label),
             (r'>>', Name.Label),
-            ('(' + atom_re + ')(:)', bygroups(Name.Namespace, Punctuation)),
-            ('(?:^|(?<=:))(' + atom_re + r')(\s*)(\()',
-             bygroups(Name.Function, Whitespace, Punctuation)),
-            (r'[+-]?' + base_re + r'#[0-9a-zA-Z]+', Number.Integer),
+            (f'({atom_re})(:)', bygroups(Name.Namespace, Punctuation)),
+            (
+                f'(?:^|(?<=:))({atom_re})(\\s*)(\\()',
+                bygroups(Name.Function, Whitespace, Punctuation),
+            ),
+            (f'[+-]?{base_re}#[0-9a-zA-Z]+', Number.Integer),
             (r'[+-]?\d+', Number.Integer),
             (r'[+-]?\d+.\d+', Number.Float),
             (r'[]\[:_@\".{}()|;,]', Punctuation),
             (variable_re, Name.Variable),
             (atom_re, Name),
-            (r'\?'+macro_re, Name.Constant),
-            (r'\$(?:'+escape_re+r'|\\[ %]|[^\\])', String.Char),
-            (r'#'+atom_re+r'(:?\.'+atom_re+r')?', Name.Label),
-
-            # Erlang script shebang
+            (f'\\?{macro_re}', Name.Constant),
+            (f'\\$(?:{escape_re}|\\\\[ %]|[^\\\\])', String.Char),
+            (f'#{atom_re}(:?\\.{atom_re})?', Name.Label),
             (r'\A#!.+\n', Comment.Hashbang),
-
-            # EEP 43: Maps
-            # http://www.erlang.org/eeps/eep-0043.html
             (r'#\{', Punctuation, 'map_key'),
         ],
         'string': [
@@ -131,10 +135,16 @@ class ErlangLexer(RegexLexer):
             (r'~', String),
         ],
         'directive': [
-            (r'(define)(\s*)(\()('+macro_re+r')',
-             bygroups(Name.Entity, Whitespace, Punctuation, Name.Constant), '#pop'),
-            (r'(record)(\s*)(\()('+macro_re+r')',
-             bygroups(Name.Entity, Whitespace, Punctuation, Name.Label), '#pop'),
+            (
+                f'(define)(\\s*)(\\()({macro_re})',
+                bygroups(Name.Entity, Whitespace, Punctuation, Name.Constant),
+                '#pop',
+            ),
+            (
+                f'(record)(\\s*)(\\()({macro_re})',
+                bygroups(Name.Entity, Whitespace, Punctuation, Name.Label),
+                '#pop',
+            ),
             (atom_re, Name.Entity, '#pop'),
         ],
         'map_key': [
@@ -193,15 +203,15 @@ class ErlangShellLexer(Lexer):
 
 
 def gen_elixir_string_rules(name, symbol, token):
-    states = {}
-    states['string_' + name] = [
-        (r'[^#%s\\]+' % (symbol,), token),
-        include('escapes'),
-        (r'\\.', token),
-        (r'(%s)' % (symbol,), bygroups(token), "#pop"),
-        include('interpol')
-    ]
-    return states
+    return {
+        f'string_{name}': [
+            (r'[^#%s\\]+' % (symbol,), token),
+            include('escapes'),
+            (r'\\.', token),
+            (r'(%s)' % (symbol,), bygroups(token), "#pop"),
+            include('interpol'),
+        ]
+    }
 
 
 def gen_elixir_sigstr_rules(term, term_class, token, interpol=True):
@@ -306,34 +316,45 @@ class ElixirLexer(RegexLexer):
 
         for term, name in triquotes:
             states['sigils'] += [
-                (r'(~[a-z])(%s)' % (term,), bygroups(token, String.Heredoc),
-                    (name + '-end', name + '-intp')),
-                (r'(~[A-Z])(%s)' % (term,), bygroups(token, String.Heredoc),
-                    (name + '-end', name + '-no-intp')),
+                (
+                    r'(~[a-z])(%s)' % (term,),
+                    bygroups(token, String.Heredoc),
+                    (f'{name}-end', f'{name}-intp'),
+                ),
+                (
+                    r'(~[A-Z])(%s)' % (term,),
+                    bygroups(token, String.Heredoc),
+                    (f'{name}-end', f'{name}-no-intp'),
+                ),
             ]
 
-            states[name + '-end'] = [
+
+            states[f'{name}-end'] = [
                 (r'[a-zA-Z]+', token, '#pop'),
                 default('#pop'),
             ]
-            states[name + '-intp'] = [
-                (r'^(\s*)(' + term + ')', bygroups(Whitespace, String.Heredoc), '#pop'),
+            states[f'{name}-intp'] = [
+                (f'^(\\s*)({term})', bygroups(Whitespace, String.Heredoc), '#pop'),
                 include('heredoc_interpol'),
             ]
-            states[name + '-no-intp'] = [
-                (r'^(\s*)(' + term +')', bygroups(Whitespace, String.Heredoc), '#pop'),
+
+            states[f'{name}-no-intp'] = [
+                (f'^(\\s*)({term})', bygroups(Whitespace, String.Heredoc), '#pop'),
                 include('heredoc_no_interpol'),
             ]
 
+
         for lterm, rterm, rterm_class, name in terminators:
             states['sigils'] += [
-                (r'~[a-z]' + lterm, token, name + '-intp'),
-                (r'~[A-Z]' + lterm, token, name + '-no-intp'),
+                (f'~[a-z]{lterm}', token, f'{name}-intp'),
+                (f'~[A-Z]{lterm}', token, f'{name}-no-intp'),
             ]
-            states[name + '-intp'] = \
-                gen_elixir_sigstr_rules(rterm, rterm_class, token)
-            states[name + '-no-intp'] = \
-                gen_elixir_sigstr_rules(rterm, rterm_class, token, interpol=False)
+
+            states[f'{name}-intp'] = gen_elixir_sigstr_rules(rterm, rterm_class, token)
+            states[f'{name}-no-intp'] = gen_elixir_sigstr_rules(
+                rterm, rterm_class, token, interpol=False
+            )
+
 
         return states
 

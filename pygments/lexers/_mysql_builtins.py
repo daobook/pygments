@@ -1211,9 +1211,12 @@ if __name__ == '__main__':  # pragma: no cover
     def parse_lex_keywords(f):
         """Parse keywords in lex.h."""
 
-        results = set()
-        for m in re.finditer(r'{SYM(?:_HK)?\("(?P<keyword>[a-z0-9_]+)",', f, flags=re.I):
-            results.add(m.group('keyword').lower())
+        results = {
+            m.group('keyword').lower()
+            for m in re.finditer(
+                r'{SYM(?:_HK)?\("(?P<keyword>[a-z0-9_]+)",', f, flags=re.I
+            )
+        }
 
         if not results:
             raise ValueError('No keywords found')
@@ -1224,9 +1227,12 @@ if __name__ == '__main__':  # pragma: no cover
     def parse_lex_optimizer_hints(f):
         """Parse optimizer hints in lex.h."""
 
-        results = set()
-        for m in re.finditer(r'{SYM_H\("(?P<keyword>[a-z0-9_]+)",', f, flags=re.I):
-            results.add(m.group('keyword').lower())
+        results = {
+            m.group('keyword').lower()
+            for m in re.finditer(
+                r'{SYM_H\("(?P<keyword>[a-z0-9_]+)",', f, flags=re.I
+            )
+        }
 
         if not results:
             raise ValueError('No optimizer hints found')
@@ -1237,9 +1243,12 @@ if __name__ == '__main__':  # pragma: no cover
     def parse_lex_functions(f):
         """Parse MySQL function names from lex.h."""
 
-        results = set()
-        for m in re.finditer(r'{SYM_FN?\("(?P<function>[a-z0-9_]+)",', f, flags=re.I):
-            results.add(m.group('function').lower())
+        results = {
+            m.group('function').lower()
+            for m in re.finditer(
+                r'{SYM_FN?\("(?P<function>[a-z0-9_]+)",', f, flags=re.I
+            )
+        }
 
         if not results:
             raise ValueError('No lex functions found')
@@ -1250,9 +1259,12 @@ if __name__ == '__main__':  # pragma: no cover
     def parse_item_create_functions(f):
         """Parse MySQL function names from item_create.cc."""
 
-        results = set()
-        for m in re.finditer(r'{"(?P<function>[^"]+?)",\s*SQL_F[^(]+?\(', f, flags=re.I):
-            results.add(m.group('function').lower())
+        results = {
+            m.group('function').lower()
+            for m in re.finditer(
+                r'{"(?P<function>[^"]+?)",\s*SQL_F[^(]+?\(', f, flags=re.I
+            )
+        }
 
         if not results:
             raise ValueError('No item_create functions found')

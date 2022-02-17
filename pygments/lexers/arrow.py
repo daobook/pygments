@@ -8,6 +8,7 @@
     :license: BSD, see LICENSE for details.
 """
 
+
 from pygments.lexer import RegexLexer, bygroups, default, include
 from pygments.token import Text, Operator, Keyword, Punctuation, Name, \
     String, Number, Whitespace
@@ -16,7 +17,9 @@ __all__ = ['ArrowLexer']
 
 TYPES = r'\b(int|bool|char)((?:\[\])*)(?=\s+)'
 IDENT = r'([a-zA-Z_][a-zA-Z0-9_]*)'
-DECL = TYPES + r'(\s+)' + IDENT
+DECL = f'{TYPES}(\\s+){IDENT}'
+
+
 
 
 class ArrowLexer(RegexLexer):
@@ -39,13 +42,21 @@ class ArrowLexer(RegexLexer):
             include('expressions'),
         ],
         'blocks': [
-            (r'(function)(\n+)(/-->)(\s*)' +
-             DECL +  # 4 groups
-             r'(\()', bygroups(
-                 Keyword.Reserved, Whitespace, Punctuation,
-                 Whitespace, Keyword.Type, Punctuation, Whitespace,
-                 Name.Function, Punctuation
-             ), 'fparams'),
+            (
+                r'(function)(\n+)(/-->)(\s*)' + DECL + r'(\()',  # 4 groups
+                bygroups(
+                    Keyword.Reserved,
+                    Whitespace,
+                    Punctuation,
+                    Whitespace,
+                    Keyword.Type,
+                    Punctuation,
+                    Whitespace,
+                    Name.Function,
+                    Punctuation,
+                ),
+                'fparams',
+            ),
             (r'/-->$|\\-->$|/--<|\\--<|\^', Punctuation),
         ],
         'statements': [
@@ -64,12 +75,11 @@ class ArrowLexer(RegexLexer):
             (r'\{', Punctuation, 'array'),
             (r'==|!=|<|>|\+|-|\*|/|%', Operator),
             (r'and|or|not|length', Operator.Word),
-            (r'(input)(\s+)(int|char\[\])', bygroups(
-                Keyword.Reserved, Whitespace, Keyword.Type
-            )),
-            (IDENT + r'(\()', bygroups(
-                Name.Function, Punctuation
-            ), 'fargs'),
+            (
+                r'(input)(\s+)(int|char\[\])',
+                bygroups(Keyword.Reserved, Whitespace, Keyword.Type),
+            ),
+            (f'{IDENT}(\\()', bygroups(Name.Function, Punctuation), 'fargs'),
             (IDENT, Name.Variable),
             (r'\[', Punctuation, 'index'),
             (r'\(', Punctuation, 'expressions'),
@@ -81,13 +91,18 @@ class ArrowLexer(RegexLexer):
             default('#pop'),
         ],
         'fparams': [
-            (DECL, bygroups(Keyword.Type, Punctuation, Whitespace, Name.Variable)),
+            (
+                DECL,
+                bygroups(Keyword.Type, Punctuation, Whitespace, Name.Variable),
+            ),
             (r',', Punctuation),
             (r'\)', Punctuation, '#pop'),
         ],
         'escape': [
-            (r'\\(["\\/abfnrtv]|[0-9]{1,3}|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4})',
-             String.Escape),
+            (
+                r'\\(["\\/abfnrtv]|[0-9]{1,3}|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4})',
+                String.Escape,
+            ),
         ],
         'char': [
             (r"'", String.Char, '#pop'),

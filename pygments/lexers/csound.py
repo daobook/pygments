@@ -225,8 +225,7 @@ class CsoundOrchestraLexer(CsoundLexer):
             yield match.start(), Name.Function, name
         else:
             type_annotation_token = Name
-            name_match = re.search(r'^(g?[afikSw])(\w+)', name)
-            if name_match:
+            if name_match := re.search(r'^(g?[afikSw])(\w+)', name):
                 yield name_match.start(1), Keyword.Type, name_match.group(1)
                 yield name_match.start(2), Name, name_match.group(2)
             else:

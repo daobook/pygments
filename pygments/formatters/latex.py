@@ -319,9 +319,11 @@ class LatexFormatter(Formatter):
         used to format text in the verbatim environment. ``arg`` is ignored.
         """
         cp = self.commandprefix
-        styles = []
-        for name, definition in self.cmd2def.items():
-            styles.append(r'\@namedef{%s@tok@%s}{%s}' % (cp, name, definition))
+        styles = [
+            r'\@namedef{%s@tok@%s}{%s}' % (cp, name, definition)
+            for name, definition in self.cmd2def.items()
+        ]
+
         return STYLE_TEMPLATE % {'cp': self.commandprefix,
                                  'styles': '\n'.join(styles)}
 
@@ -344,49 +346,43 @@ class LatexFormatter(Formatter):
             outfile.write(',codes={\\catcode`\\$=3\\catcode`\\^=7'
                           '\\catcode`\\_=8\\relax}')
         if self.verboptions:
-            outfile.write(',' + self.verboptions)
+            outfile.write(f',{self.verboptions}')
         outfile.write(']\n')
 
         for ttype, value in tokensource:
-            if ttype in Token.Comment:
-                if self.texcomments:
+            if ttype in Token.Comment and self.texcomments:
                     # Try to guess comment starting lexeme and escape it ...
-                    start = value[0:1]
-                    for i in range(1, len(value)):
-                        if start[0] != value[i]:
-                            break
-                        start += value[i]
+                start = value[:1]
+                for i in range(1, len(value)):
+                    if start[0] != value[i]:
+                        break
+                    start += value[i]
 
-                    value = value[len(start):]
-                    start = escape_tex(start, cp)
+                value = value[len(start):]
+                start = escape_tex(start, cp)
 
-                    # ... but do not escape inside comment.
-                    value = start + value
-                elif self.mathescape:
-                    # Only escape parts not inside a math environment.
-                    parts = value.split('$')
-                    in_math = False
-                    for i, part in enumerate(parts):
-                        if not in_math:
-                            parts[i] = escape_tex(part, cp)
-                        in_math = not in_math
-                    value = '$'.join(parts)
-                elif self.escapeinside:
-                    text = value
-                    value = ''
-                    while text:
-                        a, sep1, text = text.partition(self.left)
-                        if sep1:
-                            b, sep2, text = text.partition(self.right)
-                            if sep2:
-                                value += escape_tex(a, cp) + b
-                            else:
-                                value += escape_tex(a + sep1 + b, cp)
-                        else:
-                            value += escape_tex(a, cp)
-                else:
-                    value = escape_tex(value, cp)
-            elif ttype not in Token.Escape:
+                # ... but do not escape inside comment.
+                value = start + value
+            elif ttype in Token.Comment and self.mathescape:
+                # Only escape parts not inside a math environment.
+                parts = value.split('$')
+                in_math = False
+                for i, part in enumerate(parts):
+                    if not in_math:
+                        parts[i] = escape_tex(part, cp)
+                    in_math = not in_math
+                value = '$'.join(parts)
+            elif ttype in Token.Comment and self.escapeinside:
+                text = value
+                value = ''
+                while text:
+                    a, sep1, text = text.partition(self.left)
+                    if sep1:
+                        b, sep2, text = text.partition(self.right)
+                        value += escape_tex(a, cp) + b if sep2 else escape_tex(a + sep1 + b, cp)
+                    else:
+                        value += escape_tex(a, cp)
+            elif ttype in Token.Comment or ttype not in Token.Escape:
                 value = escape_tex(value, cp)
             styles = []
             while ttype is not Token:
@@ -396,8 +392,7 @@ class LatexFormatter(Formatter):
                     # not in current style
                     styles.append(_get_ttype_name(ttype))
                 ttype = ttype.parent
-            styleval = '+'.join(reversed(styles))
-            if styleval:
+            if styleval := '+'.join(reversed(styles)):
                 spl = value.split('\n')
                 for line in spl[:-1]:
                     if line:

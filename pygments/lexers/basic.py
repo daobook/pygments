@@ -8,6 +8,7 @@
     :license: BSD, see LICENSE for details.
 """
 
+
 import re
 
 from pygments.lexer import RegexLexer, bygroups, default, words, include
@@ -18,6 +19,8 @@ from pygments.lexers import _vbscript_builtins
 
 __all__ = ['BlitzBasicLexer', 'BlitzMaxLexer', 'MonkeyLexer', 'CbmBasicV2Lexer',
            'QBasicLexer', 'VBScriptLexer', 'BBCBasicLexer']
+
+
 
 
 class BlitzMaxLexer(RegexLexer):
@@ -39,7 +42,7 @@ class BlitzMaxLexer(RegexLexer):
     bmax_var = (r'(%s)(?:(?:([ \t]*)(%s)|([ \t]*:[ \t]*\b(?:Shl|Shr|Sar|Mod)\b)'
                 r'|([ \t]*)(:)([ \t]*)(?:%s|(%s)))(?:([ \t]*)(Ptr))?)') % \
         (bmax_name, bmax_sktypes, bmax_lktypes, bmax_name)
-    bmax_func = bmax_var + r'?((?:[ \t]|\.\.\n)*)([(])'
+    bmax_func = f'{bmax_var}?((?:[ \\t]|\\.\\.\\n)*)([(])'
 
     flags = re.MULTILINE | re.IGNORECASE
     tokens = {
@@ -109,6 +112,7 @@ class BlitzMaxLexer(RegexLexer):
             (r'[^"]+', String.Double),
         ],
     }
+
 
 
 class BlitzBasicLexer(RegexLexer):

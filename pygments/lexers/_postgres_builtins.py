@@ -590,10 +590,7 @@ if __name__ == '__main__':  # pragma: no cover
         update_consts(__file__, 'KEYWORDS', keywords)
 
     def parse_keywords(f):
-        kw = []
-        for m in re.finditer(r'PG_KEYWORD\("(.+?)"', f):
-            kw.append(m.group(1).upper())
-
+        kw = [m.group(1).upper() for m in re.finditer(r'PG_KEYWORD\("(.+?)"', f)]
         if not kw:
             raise ValueError('no keyword found')
 
@@ -624,8 +621,7 @@ if __name__ == '__main__':  # pragma: no cover
                     if not t: continue
                     dt.add(" ".join(t.split()))
 
-        dt = list(dt)
-        dt.sort()
+        dt = sorted(dt)
         return dt
 
     def parse_pseudos(f):

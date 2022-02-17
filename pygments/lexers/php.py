@@ -303,12 +303,10 @@ class PhpLexer(RegexLexer):
         stack = ['root']
         if self.startinline:
             stack.append('php')
-        for index, token, value in \
-                RegexLexer.get_tokens_unprocessed(self, text, stack):
-            if token is Name.Other:
-                if value in self._functions:
-                    yield index, Name.Builtin, value
-                    continue
+        for index, token, value in RegexLexer.get_tokens_unprocessed(self, text, stack):
+            if token is Name.Other and value in self._functions:
+                yield index, Name.Builtin, value
+                continue
             yield index, token, value
 
     def analyse_text(text):

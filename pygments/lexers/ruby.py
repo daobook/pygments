@@ -68,10 +68,7 @@ class RubyLexer(ExtendedRegexLexer):
             for tolerant, hdname in heredocstack:
                 lines = []
                 for match in line_re.finditer(ctx.text, ctx.pos):
-                    if tolerant:
-                        check = match.group().strip()
-                    else:
-                        check = match.group().rstrip()
+                    check = match.group().strip() if tolerant else match.group().rstrip()
                     if check == hdname:
                         for amatch in lines:
                             yield amatch.start(), String.Heredoc, amatch.group()

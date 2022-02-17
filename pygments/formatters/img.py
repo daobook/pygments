@@ -90,8 +90,7 @@ class FontManager:
             for line in lines:
                 if line.startswith(b'Fontconfig warning:'):
                     continue
-                path = line.decode().strip().strip(':')
-                if path:
+                if path := line.decode().strip().strip(':'):
                     return path
             return None
 
@@ -117,7 +116,7 @@ class FontManager:
                     self.fonts[style] = self.fonts['NORMAL']
 
     def _get_mac_font_path(self, font_map, name, style):
-        return font_map.get((name + ' ' + style).strip().lower())
+        return font_map.get(f'{name} {style}'.strip().lower())
 
     def _create_mac(self):
         font_map = {}
@@ -152,16 +151,15 @@ class FontManager:
         for suffix in ('', ' (TrueType)'):
             for style in styles:
                 try:
-                    valname = '%s%s%s' % (basename, style and ' '+style, suffix)
+                    valname = '%s%s%s' % (basename, style and f' {style}', suffix)
                     val, _ = _winreg.QueryValueEx(key, valname)
                     return val
                 except OSError:
                     continue
-        else:
-            if fail:
-                raise FontNotFound('Font %s (%s) not found in registry' %
-                                   (basename, styles[0]))
-            return None
+        if fail:
+            raise FontNotFound('Font %s (%s) not found in registry' %
+                               (basename, styles[0]))
+        return None
 
     def _create_win(self):
         lookuperror = None
@@ -176,14 +174,14 @@ class FontManager:
                     path = self._lookup_win(key, self.font_name, STYLES['NORMAL'], True)
                     self.fonts['NORMAL'] = ImageFont.truetype(path, self.font_size)
                     for style in ('ITALIC', 'BOLD', 'BOLDITALIC'):
-                        path = self._lookup_win(key, self.font_name, STYLES[style])
-                        if path:
+                        if path := self._lookup_win(
+                            key, self.font_name, STYLES[style]
+                        ):
                             self.fonts[style] = ImageFont.truetype(path, self.font_size)
+                        elif style == 'BOLDITALIC':
+                            self.fonts[style] = self.fonts['BOLD']
                         else:
-                            if style == 'BOLDITALIC':
-                                self.fonts[style] = self.fonts['BOLD']
-                            else:
-                                self.fonts[style] = self.fonts['NORMAL']
+                            self.fonts[style] = self.fonts['NORMAL']
                     return
                 except FontNotFound as err:
                     lookuperror = err
@@ -191,16 +189,15 @@ class FontManager:
                     _winreg.CloseKey(key)
             except OSError:
                 pass
-        else:
-            # If we get here, we checked all registry keys and had no luck
-            # We can be in one of two situations now:
-            # * All key lookups failed. In this case lookuperror is None and we
-            #   will raise a generic error
-            # * At least one lookup failed with a FontNotFound error. In this
-            #   case, we will raise that as a more specific error
-            if lookuperror:
-                raise lookuperror
-            raise FontNotFound('Can\'t open Windows font registry key')
+        # If we get here, we checked all registry keys and had no luck
+        # We can be in one of two situations now:
+        # * All key lookups failed. In this case lookuperror is None and we
+        #   will raise a generic error
+        # * At least one lookup failed with a FontNotFound error. In this
+        #   case, we will raise that as a more specific error
+        if lookuperror:
+            raise lookuperror
+        raise FontNotFound('Can\'t open Windows font registry key')
 
     def get_char_size(self):
         """
@@ -446,21 +443,13 @@ class ImageFormatter(Formatter):
         """
         Get the correct color for the token from the style.
         """
-        if style['color'] is not None:
-            fill = '#' + style['color']
-        else:
-            fill = '#000'
-        return fill
+        return '#' + style['color'] if style['color'] is not None else '#000'
 
     def _get_text_bg_color(self, style):
         """
         Get the correct background color for the token from the style.
         """
-        if style['bgcolor'] is not None:
-            bg_color = '#' + style['bgcolor']
-        else:
-            bg_color = None
-        return bg_color
+        return '#' + style['bgcolor'] if style['bgcolor'] is not None else None
 
     def _get_style_font(self, style):
         """
@@ -510,9 +499,8 @@ class ImageFormatter(Formatter):
             value = value.expandtabs(4)
             lines = value.splitlines(True)
             # print lines
-            for i, line in enumerate(lines):
-                temp = line.rstrip('\n')
-                if temp:
+            for line in lines:
+                if temp := line.rstrip('\n'):
                     self._draw_text(
                         self._get_text_pos(linelength, lineno),
                         temp,

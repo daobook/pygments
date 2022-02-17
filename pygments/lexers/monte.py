@@ -8,6 +8,7 @@
     :license: BSD, see LICENSE for details.
 """
 
+
 from pygments.token import Comment, Error, Keyword, Name, Number, Operator, \
     Punctuation, String, Whitespace
 from pygments.lexer import RegexLexer, include, words
@@ -75,6 +76,8 @@ _safeScope = [
 ]
 
 
+
+
 class MonteLexer(RegexLexer):
     """
     Lexer for the `Monte <https://monte.readthedocs.io/>`_ programming language.
@@ -87,67 +90,30 @@ class MonteLexer(RegexLexer):
 
     tokens = {
         'root': [
-            # Comments
             (r'#[^\n]*\n', Comment),
-
-            # Docstrings
-            # Apologies for the non-greedy matcher here.
             (r'/\*\*.*?\*/', String.Doc),
-
-            # `var` declarations
             (r'\bvar\b', Keyword.Declaration, 'var'),
-
-            # `interface` declarations
             (r'\binterface\b', Keyword.Declaration, 'interface'),
-
-            # method declarations
-            (words(_methods, prefix='\\b', suffix='\\b'),
-             Keyword, 'method'),
-
-            # All other declarations
-            (words(_declarations, prefix='\\b', suffix='\\b'),
-             Keyword.Declaration),
-
-            # Keywords
+            (words(_methods, prefix='\\b', suffix='\\b'), Keyword, 'method'),
+            (
+                words(_declarations, prefix='\\b', suffix='\\b'),
+                Keyword.Declaration,
+            ),
             (words(_keywords, prefix='\\b', suffix='\\b'), Keyword),
-
-            # Literals
             ('[+-]?0x[_0-9a-fA-F]+', Number.Hex),
             (r'[+-]?[_0-9]+\.[_0-9]*([eE][+-]?[_0-9]+)?', Number.Float),
             ('[+-]?[_0-9]+', Number.Integer),
             ("'", String.Double, 'char'),
             ('"', String.Double, 'string'),
-
-            # Quasiliterals
             ('`', String.Backtick, 'ql'),
-
-            # Operators
             (words(_operators), Operator),
-
-            # Verb operators
-            (_identifier + '=', Operator.Word),
-
-            # Safe scope constants
-            (words(_constants, prefix='\\b', suffix='\\b'),
-             Keyword.Pseudo),
-
-            # Safe scope guards
+            (f'{_identifier}=', Operator.Word),
+            (words(_constants, prefix='\\b', suffix='\\b'), Keyword.Pseudo),
             (words(_guards, prefix='\\b', suffix='\\b'), Keyword.Type),
-
-            # All other safe scope names
-            (words(_safeScope, prefix='\\b', suffix='\\b'),
-             Name.Builtin),
-
-            # Identifiers
+            (words(_safeScope, prefix='\\b', suffix='\\b'), Name.Builtin),
             (_identifier, Name),
-
-            # Punctuation
             (r'\(|\)|\{|\}|\[|\]|:|,', Punctuation),
-
-            # Whitespace
             (' +', Whitespace),
-
-            # Definite lexer errors
             ('=', Error),
         ],
         'char': [
@@ -161,13 +127,11 @@ class MonteLexer(RegexLexer):
             # It is definitely an error to have a char of width > 1.
             ('.', Error),
         ],
-        # The state of things coming into an interface.
         'interface': [
             (' +', Whitespace),
             (_identifier, Name.Class, '#pop'),
             include('root'),
         ],
-        # The state of things coming into a method.
         'method': [
             (' +', Whitespace),
             (_identifier, Name.Function, '#pop'),
@@ -181,20 +145,19 @@ class MonteLexer(RegexLexer):
         ],
         'ql': [
             ('`', String.Backtick, 'root'),
-            (r'\$' + _escape_pattern, String.Escape),
+            (f'\\${_escape_pattern}', String.Escape),
             (r'\$\$', String.Escape),
             (r'@@', String.Escape),
             (r'\$\{', String.Interpol, 'qlNest'),
             (r'@\{', String.Interpol, 'qlNest'),
-            (r'\$' + _identifier, Name),
-            ('@' + _identifier, Name),
+            (f'\\${_identifier}', Name),
+            (f'@{_identifier}', Name),
             ('.', String.Backtick),
         ],
         'qlNest': [
             (r'\}', String.Interpol, '#pop'),
             include('root'),
         ],
-        # The state of things immediately following `var`.
         'var': [
             (' +', Whitespace),
             (_identifier, Name.Variable, '#pop'),

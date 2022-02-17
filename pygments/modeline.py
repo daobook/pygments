@@ -20,8 +20,7 @@ modeline_re = re.compile(r'''
 
 
 def get_filetype_from_line(l):
-    m = modeline_re.search(l)
-    if m:
+    if m := modeline_re.search(l):
         return m.group(1)
 
 
@@ -31,13 +30,11 @@ def get_filetype_from_buffer(buf, max_lines=5):
     """
     lines = buf.splitlines()
     for l in lines[-1:-max_lines-1:-1]:
-        ret = get_filetype_from_line(l)
-        if ret:
+        if ret := get_filetype_from_line(l):
             return ret
     for i in range(max_lines, -1, -1):
         if i < len(lines):
-            ret = get_filetype_from_line(lines[i])
-            if ret:
+            if ret := get_filetype_from_line(lines[i]):
                 return ret
 
     return None

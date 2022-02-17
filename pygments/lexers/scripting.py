@@ -1222,9 +1222,8 @@ class JclLexer(RegexLexer):
         """
         result = 0.0
         lines = text.split('\n')
-        if len(lines) > 0:
-            if JclLexer._JOB_HEADER_PATTERN.match(lines[0]):
-                result = 1.0
+        if len(lines) > 0 and JclLexer._JOB_HEADER_PATTERN.match(lines[0]):
+            result = 1.0
         assert 0.0 <= result <= 1.0
         return result
 

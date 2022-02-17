@@ -8,18 +8,19 @@
     :license: BSD, see LICENSE for details.
 """
 
+
 esc = "\x1b["
 
-codes = {}
-codes[""] = ""
-codes["reset"] = esc + "39;49;00m"
-
-codes["bold"] = esc + "01m"
-codes["faint"] = esc + "02m"
-codes["standout"] = esc + "03m"
-codes["underline"] = esc + "04m"
-codes["blink"] = esc + "05m"
-codes["overline"] = esc + "06m"
+codes = {
+    '': '',
+    'reset': f'{esc}39;49;00m',
+    'bold': f'{esc}01m',
+    'faint': f'{esc}02m',
+    'standout': f'{esc}03m',
+    'underline': f'{esc}04m',
+    'blink': f'{esc}05m',
+    'overline': f'{esc}06m',
+}
 
 dark_colors = ["black", "red", "green", "yellow", "blue",
                "magenta", "cyan", "gray"]
@@ -64,7 +65,5 @@ def ansiformat(attr, text):
     if attr[:1] == attr[-1:] == '_':
         result.append(codes['underline'])
         attr = attr[1:-1]
-    result.append(codes[attr])
-    result.append(text)
-    result.append(codes['reset'])
+    result.extend((codes[attr], text, codes['reset']))
     return ''.join(result)

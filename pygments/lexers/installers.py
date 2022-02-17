@@ -8,6 +8,7 @@
     :license: BSD, see LICENSE for details.
 """
 
+
 import re
 
 from pygments.lexer import RegexLexer, include, bygroups, using, this, default
@@ -143,6 +144,8 @@ class NSISLexer(RegexLexer):
     }
 
 
+
+
 class RPMSpecLexer(RegexLexer):
     """
     For RPM ``.spec`` files.
@@ -164,37 +167,50 @@ class RPMSpecLexer(RegexLexer):
             include('basic'),
         ],
         'description': [
-            (r'^(%' + _directives + ')(.*)$',
-             bygroups(Name.Decorator, Text), '#pop'),
+            (
+                f'^(%{_directives})(.*)$',
+                bygroups(Name.Decorator, Text),
+                '#pop',
+            ),
             (r'\n', Text),
             (r'.', Text),
         ],
         'changelog': [
             (r'\*.*\n', Generic.Subheading),
-            (r'^(%' + _directives + ')(.*)$',
-             bygroups(Name.Decorator, Text), '#pop'),
+            (
+                f'^(%{_directives})(.*)$',
+                bygroups(Name.Decorator, Text),
+                '#pop',
+            ),
             (r'\n', Text),
             (r'.', Text),
         ],
         'string': [
             (r'"', String.Double, '#pop'),
-            (r'\\([\\abfnrtv"\']|x[a-fA-F0-9]{2,4}|[0-7]{1,3})', String.Escape),
+            (
+                r'\\([\\abfnrtv"\']|x[a-fA-F0-9]{2,4}|[0-7]{1,3})',
+                String.Escape,
+            ),
             include('interpol'),
             (r'.', String.Double),
         ],
         'basic': [
             include('macro'),
-            (r'(?i)^(Name|Version|Release|Epoch|Summary|Group|License|Packager|'
-             r'Vendor|Icon|URL|Distribution|Prefix|Patch[0-9]*|Source[0-9]*|'
-             r'Requires\(?[a-z]*\)?|[a-z]+Req|Obsoletes|Suggests|Provides|Conflicts|'
-             r'Build[a-z]+|[a-z]+Arch|Auto[a-z]+)(:)(.*)$',
-             bygroups(Generic.Heading, Punctuation, using(this))),
+            (
+                r'(?i)^(Name|Version|Release|Epoch|Summary|Group|License|Packager|'
+                r'Vendor|Icon|URL|Distribution|Prefix|Patch[0-9]*|Source[0-9]*|'
+                r'Requires\(?[a-z]*\)?|[a-z]+Req|Obsoletes|Suggests|Provides|Conflicts|'
+                r'Build[a-z]+|[a-z]+Arch|Auto[a-z]+)(:)(.*)$',
+                bygroups(Generic.Heading, Punctuation, using(this)),
+            ),
             (r'^%description', Name.Decorator, 'description'),
             (r'^%changelog', Name.Decorator, 'changelog'),
-            (r'^(%' + _directives + ')(.*)$', bygroups(Name.Decorator, Text)),
-            (r'%(attr|defattr|dir|doc(?:dir)?|setup|config(?:ure)?|'
-             r'make(?:install)|ghost|patch[0-9]+|find_lang|exclude|verify)',
-             Keyword),
+            (f'^(%{_directives})(.*)$', bygroups(Name.Decorator, Text)),
+            (
+                r'%(attr|defattr|dir|doc(?:dir)?|setup|config(?:ure)?|'
+                r'make(?:install)|ghost|patch[0-9]+|find_lang|exclude|verify)',
+                Keyword,
+            ),
             include('interpol'),
             (r"'.*?'", String.Single),
             (r'"', String.Double, 'string'),
@@ -203,8 +219,10 @@ class RPMSpecLexer(RegexLexer):
         'macro': [
             (r'%define.*\n', Comment.Preproc),
             (r'%\{\!\?.*%define.*\}', Comment.Preproc),
-            (r'(%(?:if(?:n?arch)?|else(?:if)?|endif))(.*)$',
-             bygroups(Comment.Preproc, Text)),
+            (
+                r'(%(?:if(?:n?arch)?|else(?:if)?|endif))(.*)$',
+                bygroups(Comment.Preproc, Text),
+            ),
         ],
         'interpol': [
             (r'%\{?__[a-z_]+\}?', Name.Function),
@@ -212,7 +230,7 @@ class RPMSpecLexer(RegexLexer):
             (r'%\{\?\w+\}', Name.Variable),
             (r'\$\{?RPM_[A-Z0-9_]+\}?', Name.Variable.Global),
             (r'%\{[a-zA-Z]\w+\}', Keyword.Constant),
-        ]
+        ],
     }
 
 

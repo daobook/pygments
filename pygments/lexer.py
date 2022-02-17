@@ -307,8 +307,7 @@ def bygroups(*args):
             if action is None:
                 continue
             elif type(action) is _TokenType:
-                data = match.group(i + 1)
-                if data:
+                if data := match.group(i + 1):
                     yield match.start(i + 1), action, data
             else:
                 data = match.group(i + 1)
@@ -458,8 +457,7 @@ class RegexLexerMeta(LexerMeta):
             # push more than one state
             for istate in new_state:
                 assert (istate in unprocessed or
-                        istate in ('#pop', '#push')), \
-                    'unknown new state ' + istate
+                        istate in ('#pop', '#push')), f'unknown new state {istate}'
             return new_state
         else:
             assert False, 'unknown new state def %r' % new_state
@@ -570,10 +568,7 @@ class RegexLexerMeta(LexerMeta):
         if '_tokens' not in cls.__dict__:
             cls._all_tokens = {}
             cls._tmpname = 0
-            if hasattr(cls, 'token_variants') and cls.token_variants:
-                # don't process yet
-                pass
-            else:
+            if not hasattr(cls, 'token_variants') or not cls.token_variants:
                 cls._tokens = cls.process_tokendef('', cls.get_tokendefs())
 
         return type.__call__(cls, *args, **kwds)
@@ -626,8 +621,7 @@ class RegexLexer(Lexer, metaclass=RegexLexerMeta):
         statetokens = tokendefs[statestack[-1]]
         while 1:
             for rexmatch, action, new_state in statetokens:
-                m = rexmatch(text, pos)
-                if m:
+                if m := rexmatch(text, pos):
                     if action is not None:
                         if type(action) is _TokenType:
                             yield pos, action, m.group()
@@ -712,8 +706,7 @@ class ExtendedRegexLexer(RegexLexer):
             text = ctx.text
         while 1:
             for rexmatch, action, new_state in statetokens:
-                m = rexmatch(text, ctx.pos, ctx.end)
-                if m:
+                if m := rexmatch(text, ctx.pos, ctx.end):
                     if action is not None:
                         if type(action) is _TokenType:
                             yield ctx.pos, action, m.group()
@@ -797,8 +790,7 @@ def do_insertions(insertions, tokens):
             realpos = i
         oldi = 0
         while insleft and i + len(v) >= index:
-            tmpval = v[oldi:index - i]
-            if tmpval:
+            if tmpval := v[oldi : index - i]:
                 yield realpos, t, tmpval
                 realpos += len(tmpval)
             for it_index, it_token, it_value in itokens:

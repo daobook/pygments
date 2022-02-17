@@ -1339,17 +1339,16 @@ class Tads3Lexer(RegexLexer):
                     re.match(r'%sif%s+(0|nil)%s*$\n?' %
                              (pp, self._ws_pp, self._ws_pp), value)):
                     if_false_level = 1
-            else:  # In a false #if
-                if token is Comment.Preproc:
-                    if (if_false_level == 1 and
-                          re.match(r'%sel(if|se)\b' % pp, value)):
-                        if_false_level = 0
-                    elif re.match(r'%sif' % pp, value):
-                        if_false_level += 1
-                    elif re.match(r'%sendif\b' % pp, value):
-                        if_false_level -= 1
-                else:
-                    token = Comment
+            elif token is Comment.Preproc:
+                if (if_false_level == 1 and
+                      re.match(r'%sel(if|se)\b' % pp, value)):
+                    if_false_level = 0
+                elif re.match(r'%sif' % pp, value):
+                    if_false_level += 1
+                elif re.match(r'%sendif\b' % pp, value):
+                    if_false_level -= 1
+            else:
+                token = Comment
             yield index, token, value
 
     def analyse_text(text):

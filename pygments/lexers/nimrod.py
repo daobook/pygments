@@ -36,7 +36,7 @@ class NimrodLexer(RegexLexer):
         new = ""
         for word in words:
             for ch in word:
-                new += (ch + "_?")
+                new += f'{ch}_?'
             newWords.append(new)
             new = ""
         return "|".join(newWords)

@@ -23,10 +23,10 @@ def find_filter_class(filtername):
     """Lookup a filter by name. Return None if not found."""
     if filtername in FILTERS:
         return FILTERS[filtername]
-    for name, cls in find_plugin_filters():
-        if name == filtername:
-            return cls
-    return None
+    return next(
+        (cls for name, cls in find_plugin_filters() if name == filtername),
+        None,
+    )
 
 
 def get_filter_by_name(filtername, **options):
@@ -35,8 +35,7 @@ def get_filter_by_name(filtername, **options):
     Options are passed to the filter initializer if wanted.
     Raise a ClassNotFound if not found.
     """
-    cls = find_filter_class(filtername)
-    if cls:
+    if cls := find_filter_class(filtername):
         return cls(**options)
     else:
         raise ClassNotFound('filter %r not found' % filtername)
@@ -736,8 +735,7 @@ class NameHighlightFilter(Filter):
     def __init__(self, **options):
         Filter.__init__(self, **options)
         self.names = set(get_list_opt(options, 'names', []))
-        tokentype = options.get('tokentype')
-        if tokentype:
+        if tokentype := options.get('tokentype'):
             self.tokentype = string_to_tokentype(tokentype)
         else:
             self.tokentype = Name.Function
@@ -881,10 +879,7 @@ class GobbleFilter(Filter):
         self.n = get_int_opt(options, 'n', 0)
 
     def gobble(self, value, left):
-        if left < len(value):
-            return value[left:], 0
-        else:
-            return '', left - len(value)
+        return (value[left:], 0) if left < len(value) else ('', left - len(value))
 
     def filter(self, lexer, stream):
         n = self.n

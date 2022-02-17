@@ -2798,11 +2798,7 @@ class MatlabSessionLexer(Lexer):
 
             # Does not allow continuation if a comment is included after the ellipses.
             # Continues any line that ends with ..., even comments (lines that start with %)
-            if line.strip().endswith('...'):
-                continuation = True
-            else:
-                continuation = False
-
+            continuation = bool(line.strip().endswith('...'))
         if curcode:  # or item:
             yield from do_insertions(
                 insertions, mlexer.get_tokens_unprocessed(curcode))

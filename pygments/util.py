@@ -97,7 +97,7 @@ def docstring_headline(obj):
     res = []
     for line in obj.__doc__.strip().splitlines():
         if line.strip():
-            res.append(" " + line.strip())
+            res.append(f' {line.strip()}')
         else:
             break
     return ''.join(res).lstrip()
@@ -149,10 +149,7 @@ def shebang_matches(text, regex):
     the regular expression is wrapped in ``'^$'``)
     """
     index = text.find('\n')
-    if index >= 0:
-        first_line = text[:index].lower()
-    else:
-        first_line = text.lower()
+    first_line = text[:index].lower() if index >= 0 else text.lower()
     if first_line.startswith('#!'):
         try:
             found = [x for x in split_path_re.split(first_line[2:].strip())
@@ -213,20 +210,17 @@ def surrogatepair(c):
 
 def format_lines(var_name, seq, raw=False, indent_level=0):
     """Formats a sequence of strings for output."""
-    lines = []
     base_indent = ' ' * indent_level * 4
     inner_indent = ' ' * (indent_level + 1) * 4
-    lines.append(base_indent + var_name + ' = (')
-    if raw:
-        # These should be preformatted reprs of, say, tuples.
-        for i in seq:
+    lines = [base_indent + var_name + ' = (']
+    for i in seq:
+        if raw:
             lines.append(inner_indent + i + ',')
-    else:
-        for i in seq:
+        else:
             # Force use of single quotes
             r = repr(i + '"')
             lines.append(inner_indent + r[:-2] + r[-1] + ',')
-    lines.append(base_indent + ')')
+    lines.append(f'{base_indent})')
     return '\n'.join(lines)
 
 

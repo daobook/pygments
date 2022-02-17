@@ -1285,10 +1285,7 @@ class Modula2Lexer(RegexLexer):
         styles = get_list_opt(options, 'style', [])
         #
         # use lowercase mode for Algol style
-        if 'algol' in styles or 'algol_nu' in styles:
-            self.algol_publication_mode = True
-        else:
-            self.algol_publication_mode = False
+        self.algol_publication_mode = 'algol' in styles or 'algol_nu' in styles
         #
         # Check option flags
         #
@@ -1305,10 +1302,7 @@ class Modula2Lexer(RegexLexer):
         #    print 'entered set_dialect with arg: ', dialect_id
         #
         # check dialect name against known dialects
-        if dialect_id not in self.dialects:
-            dialect = 'unknown'  # default
-        else:
-            dialect = dialect_id
+        dialect = 'unknown' if dialect_id not in self.dialects else dialect_id
         #
         # compose lexemes to reject set
         lexemes_to_reject_set = set()
@@ -1412,23 +1406,18 @@ class Modula2Lexer(RegexLexer):
         left_tag_delim_len = len(left_tag_delim)
         right_tag_delim_len = len(right_tag_delim)
         indicator_start = left_tag_delim_len
-        indicator_end = -(right_tag_delim_len)
-        #
-        # check comment string for dialect indicator
-        if len(dialect_tag) > (left_tag_delim_len + right_tag_delim_len) \
-           and dialect_tag.startswith(left_tag_delim) \
-           and dialect_tag.endswith(right_tag_delim):
+        if (
+            len(dialect_tag) > indicator_start + right_tag_delim_len
+            and dialect_tag.startswith(left_tag_delim)
+            and dialect_tag.endswith(right_tag_delim)
+        ):
+            indicator_end = -(right_tag_delim_len)
             #
             # if __debug__:
             #    print 'dialect tag found'
             #
             # extract dialect indicator
             indicator = dialect_tag[indicator_start:indicator_end]
-            #
-            # if __debug__:
-            #    print 'extracted: ', indicator
-            #
-            # check against known dialects
             for index in range(1, len(self.dialects)):
                 #
                 # if __debug__:
@@ -1441,12 +1430,8 @@ class Modula2Lexer(RegexLexer):
                     #
                     # indicator matches known dialect
                     return indicator
-            else:
-                # indicator does not match any dialect
-                return 'unknown'  # default
-        else:
-            # invalid indicator string
-            return 'unknown'  # default
+        # indicator does not match any dialect
+        return 'unknown'  # default
 
     # intercept the token stream, modify token attributes and return them
     def get_tokens_unprocessed(self, text):
@@ -1500,14 +1485,12 @@ class Modula2Lexer(RegexLexer):
                 #
                 elif value in self.constants:
                     token = Name.Constant
-            #
             elif token in Number:
                 #
                 # mark prefix number literals as error for PIM and ISO dialects
                 if self.dialect not in ('unknown', 'm2r10', 'objm2'):
-                    if "'" in value or value[0:2] in ('0b', '0x', '0u'):
+                    if "'" in value or value[:2] in ('0b', '0x', '0u'):
                         token = Error
-                #
                 elif self.dialect in ('m2r10', 'objm2'):
                     # mark base-8 number literals as errors for M2 R10 and ObjM2
                     if token is Number.Oct:
@@ -1518,13 +1501,15 @@ class Modula2Lexer(RegexLexer):
                     # mark real numbers with E as errors for M2 R10 and ObjM2
                     elif token is Number.Float and 'E' in value:
                         token = Error
-            #
             elif token in Comment:
                 #
                 # mark single line comment as error for PIM and ISO dialects
-                if token is Comment.Single:
-                    if self.dialect not in ('unknown', 'm2r10', 'objm2'):
-                        token = Error
+                if token is Comment.Single and self.dialect not in (
+                    'unknown',
+                    'm2r10',
+                    'objm2',
+                ):
+                    token = Error
                 #
                 if token is Comment.Preproc:
                     # mark ISO pragma as error for PIM dialects
@@ -1536,7 +1521,6 @@ class Modula2Lexer(RegexLexer):
                             self.dialect != 'unknown' and \
                             not self.dialect.startswith('m2pim'):
                         token = Comment.Multiline
-            #
             else:  # token is neither Name nor Comment
                 #
                 # mark lexemes matching the dialect's error token set as errors
@@ -1564,7 +1548,7 @@ class Modula2Lexer(RegexLexer):
         instead."""
 
         # Check if this looks like Pascal, if not, bail out early
-        if not ('(*' in text and '*)' in text and ':=' in text):
+        if '(*' not in text or '*)' not in text or ':=' not in text:
             return
 
         result = 0

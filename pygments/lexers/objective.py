@@ -179,12 +179,13 @@ def objective(baselexer):
             from pygments.lexers._cocoa_builtins import COCOA_INTERFACES, \
                 COCOA_PROTOCOLS, COCOA_PRIMITIVES
 
-            for index, token, value in \
-                    baselexer.get_tokens_unprocessed(self, text):
-                if token is Name or token is Name.Class:
-                    if value in COCOA_INTERFACES or value in COCOA_PROTOCOLS \
-                       or value in COCOA_PRIMITIVES:
-                        token = Name.Builtin.Pseudo
+            for index, token, value in baselexer.get_tokens_unprocessed(self, text):
+                if (token is Name or token is Name.Class) and (
+                    value in COCOA_INTERFACES
+                    or value in COCOA_PROTOCOLS
+                    or value in COCOA_PRIMITIVES
+                ):
+                    token = Name.Builtin.Pseudo
 
                 yield index, token, value
 
@@ -274,9 +275,7 @@ class LogosLexer(ObjectiveCppLexer):
     _logos_keywords = re.compile(r'%(?:hook|ctor|init|c\()')
 
     def analyse_text(text):
-        if LogosLexer._logos_keywords.search(text):
-            return 1.0
-        return 0
+        return 1.0 if LogosLexer._logos_keywords.search(text) else 0
 
 
 class SwiftLexer(RegexLexer):
@@ -493,11 +492,12 @@ class SwiftLexer(RegexLexer):
         from pygments.lexers._cocoa_builtins import COCOA_INTERFACES, \
             COCOA_PROTOCOLS, COCOA_PRIMITIVES
 
-        for index, token, value in \
-                RegexLexer.get_tokens_unprocessed(self, text):
-            if token is Name or token is Name.Class:
-                if value in COCOA_INTERFACES or value in COCOA_PROTOCOLS \
-                   or value in COCOA_PRIMITIVES:
-                    token = Name.Builtin.Pseudo
+        for index, token, value in RegexLexer.get_tokens_unprocessed(self, text):
+            if (token is Name or token is Name.Class) and (
+                value in COCOA_INTERFACES
+                or value in COCOA_PROTOCOLS
+                or value in COCOA_PRIMITIVES
+            ):
+                token = Name.Builtin.Pseudo
 
             yield index, token, value

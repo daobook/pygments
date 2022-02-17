@@ -44,7 +44,7 @@ def webify(color):
     if color.startswith('calc') or color.startswith('var'):
         return color
     else:
-        return '#' + color
+        return f'#{color}'
 
 
 def _get_ttype_class(ttype):
@@ -53,7 +53,7 @@ def _get_ttype_class(ttype):
         return fname
     aname = ''
     while fname is None:
-        aname = '-' + ttype[-1] + aname
+        aname = f'-{ttype[-1]}{aname}'
         ttype = ttype.parent
         fname = STANDARD_TYPES.get(ttype)
     return fname + aname
@@ -454,8 +454,7 @@ class HtmlFormatter(Formatter):
     def _get_css_class(self, ttype):
         """Return the css class of this token type prefixed with
         the classprefix option."""
-        ttypeclass = _get_ttype_class(ttype)
-        if ttypeclass:
+        if ttypeclass := _get_ttype_class(ttype):
             return self.classprefix + ttypeclass
         return ''
 
@@ -464,7 +463,7 @@ class HtmlFormatter(Formatter):
         cls = self._get_css_class(ttype)
         while ttype not in STANDARD_TYPES:
             ttype = ttype.parent
-            cls = self._get_css_class(ttype) + ' ' + cls
+            cls = f'{self._get_css_class(ttype)} {cls}'
         return cls or ''
 
     def _get_css_inline_styles(self, ttype):
@@ -523,12 +522,10 @@ class HtmlFormatter(Formatter):
         ]
         styles.sort()
 
-        lines = [
+        return [
             '%s { %s } /* %s */' % (prefix(cls), style, repr(ttype)[6:])
             for (level, ttype, cls, style) in styles
         ]
-
-        return lines
 
     def get_background_style_defs(self, arg=None):
         prefix = self.get_css_prefix(arg)
@@ -554,15 +551,13 @@ class HtmlFormatter(Formatter):
         return lines
 
     def get_linenos_style_defs(self):
-        lines = [
+        return [
             'pre { %s }' % self._pre_style,
             'td.linenos .normal { %s }' % self._linenos_style,
             'span.linenos { %s }' % self._linenos_style,
             'td.linenos .special { %s }' % self._linenos_special_style,
             'span.linenos.special { %s }' % self._linenos_special_style,
         ]
-
-        return lines
 
     def get_css_prefix(self, arg):
         if arg is None:
@@ -574,10 +569,8 @@ class HtmlFormatter(Formatter):
 
         def prefix(cls):
             if cls:
-                cls = '.' + cls
-            tmp = []
-            for arg in args:
-                tmp.append((arg and arg + ' ' or '') + cls)
+                cls = f'.{cls}'
+            tmp = [(arg and f'{arg} ' or '') + cls for arg in args]
             return ', '.join(tmp)
 
         return prefix
@@ -602,9 +595,7 @@ class HtmlFormatter(Formatter):
 
     def _decodeifneeded(self, value):
         if isinstance(value, bytes):
-            if self.encoding:
-                return value.decode(self.encoding)
-            return value.decode()
+            return value.decode(self.encoding) if self.encoding else value.decode()
         return value
 
     def _wrap_full(self, inner, outfile):
@@ -632,7 +623,7 @@ class HtmlFormatter(Formatter):
                         cf.write(CSSFILE_TEMPLATE %
                                  {'styledefs': self.get_style_defs('body')})
             except OSError as err:
-                err.strerror = 'Error writing CSS file: ' + err.strerror
+                err.strerror = f'Error writing CSS file: {err.strerror}'
                 raise
 
             yield 0, (DOC_HEADER_EXTERNALCSS %
@@ -667,10 +658,9 @@ class HtmlFormatter(Formatter):
         lines = []
 
         for i in range(fl, fl+lncount):
-            print_line = i % st == 0
             special_line = sp and i % sp == 0
 
-            if print_line:
+            if print_line := i % st == 0:
                 line = '%*d' % (mw, i)
                 if aln:
                     line = '<a href="#%s-%d">%s</a>' % (la, i, line)
@@ -683,11 +673,7 @@ class HtmlFormatter(Formatter):
                 else:
                     style = ' style="%s"' % self._linenos_style
             else:
-                if special_line:
-                    style = ' class="special"'
-                else:
-                    style = ' class="normal"'
-
+                style = ' class="special"' if special_line else ' class="normal"'
             if style:
                 line = '<span%s>%s</span>' % (style, line)
 
@@ -730,27 +716,15 @@ class HtmlFormatter(Formatter):
             print_line = num % st == 0
             special_line = sp and num % sp == 0
 
-            if print_line:
-                line = '%*d' % (mw, num)
-            else:
-                line = ' ' * mw
-
+            line = '%*d' % (mw, num) if print_line else ' ' * mw
             if nocls:
                 if special_line:
                     style = ' style="%s"' % self._linenos_special_style
                 else:
                     style = ' style="%s"' % self._linenos_style
             else:
-                if special_line:
-                    style = ' class="linenos special"'
-                else:
-                    style = ' class="linenos"'
-
-            if style:
-                linenos = '<span%s>%s</span>' % (style, line)
-            else:
-                linenos = line
-
+                style = ' class="linenos special"' if special_line else ' class="linenos"'
+            linenos = '<span%s>%s</span>' % (style, line) if style else line
             if aln:
                 yield 1, ('<a href="#%s-%d">%s</a>' % (la, num, linenos) +
                           inner_line)
@@ -857,7 +831,7 @@ class HtmlFormatter(Formatter):
                                                'fext': extension}
                     parts[0] = "<a href=\"%s#%s-%d\">%s" % \
                         (url, self.lineanchors, linenumber, parts[0])
-                    parts[-1] = parts[-1] + "</a>"
+                    parts[-1] = f'{parts[-1]}</a>'
 
             # for all but the last line
             for part in parts[:-1]:
@@ -883,7 +857,7 @@ class HtmlFormatter(Formatter):
             elif parts[-1]:
                 line = [cspan, parts[-1]]
                 lspan = cspan
-            # else we neither have to open a new span nor set lspan
+                # else we neither have to open a new span nor set lspan
 
         if line:
             line.extend(((lspan and '</span>'), lsep))

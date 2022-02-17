@@ -85,7 +85,7 @@ class RtfFormatter(Formatter):
             elif (2**7) <= cn < (2**16):
                 # single unicode escape sequence
                 buf.append('{\\u%d}' % cn)
-            elif (2**16) <= cn:
+            else:
                 # RTF limits unicode to 16 bits.
                 # Force surrogate pairs
                 buf.append('{\\u%d}{\\u%d}' % surrogatepair(cn))
@@ -94,11 +94,15 @@ class RtfFormatter(Formatter):
 
     def format_unencoded(self, tokensource, outfile):
         # rtf 1.8 header
-        outfile.write('{\\rtf1\\ansi\\uc0\\deff0'
-                      '{\\fonttbl{\\f0\\fmodern\\fprq1\\fcharset0%s;}}'
-                      '{\\colortbl;' % (self.fontface and
-                                        ' ' + self._escape(self.fontface) or
-                                        ''))
+        outfile.write(
+            (
+                '{\\rtf1\\ansi\\uc0\\deff0'
+                '{\\fonttbl{\\f0\\fmodern\\fprq1\\fcharset0%s;}}'
+                '{\\colortbl;'
+                % (self.fontface and f' {self._escape(self.fontface)}' or '')
+            )
+        )
+
 
         # convert colors and save them in a mapping to access them later.
         color_mapping = {}
@@ -107,11 +111,17 @@ class RtfFormatter(Formatter):
             for color in style['color'], style['bgcolor'], style['border']:
                 if color and color not in color_mapping:
                     color_mapping[color] = offset
-                    outfile.write('\\red%d\\green%d\\blue%d;' % (
-                        int(color[0:2], 16),
-                        int(color[2:4], 16),
-                        int(color[4:6], 16)
-                    ))
+                    outfile.write(
+                        (
+                            '\\red%d\\green%d\\blue%d;'
+                            % (
+                                int(color[:2], 16),
+                                int(color[2:4], 16),
+                                int(color[4:6], 16),
+                            )
+                        )
+                    )
+
                     offset += 1
         outfile.write('}\\f0 ')
         if self.fontsize:

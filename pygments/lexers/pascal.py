@@ -329,10 +329,7 @@ class DelphiLexer(Lexer):
                 if scanner.scan(r'\s+'):
                     token = Text
                 elif scanner.scan(r'\{.*?\}|\(\*.*?\*\)'):
-                    if scanner.match.startswith('$'):
-                        token = Comment.Preproc
-                    else:
-                        token = Comment.Multiline
+                    token = Comment.Preproc if scanner.match.startswith('$') else Comment.Multiline
                 elif scanner.scan(r'//.*?$'):
                     token = Comment.Single
                 elif scanner.scan(r'[-+*\/=<>:;,.@\^]'):
@@ -468,10 +465,7 @@ class DelphiLexer(Lexer):
                     token = Keyword
                     stack.pop()
                 elif scanner.scan(r'\{.*?\}|\(\*.*?\*\)'):
-                    if scanner.match.startswith('$'):
-                        token = Comment.Preproc
-                    else:
-                        token = Comment.Multiline
+                    token = Comment.Preproc if scanner.match.startswith('$') else Comment.Multiline
                 elif scanner.scan(r'//.*?$'):
                     token = Comment.Single
                 elif scanner.scan(r"'"):

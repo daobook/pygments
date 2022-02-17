@@ -46,7 +46,7 @@ ERROR = Token.Error
 
 def normalize(string, remove=''):
     string = string.lower()
-    for char in remove + ' ':
+    for char in f'{remove} ':
         if char in string:
             string = string.replace(char, '')
     return string

@@ -85,16 +85,16 @@ def language_callback(lexer, match):
     m = language_re.match(lexer.text[match.end():match.end()+100])
     if m is not None:
         lx = lexer._get_lexer(m.group(1))
-    else:
-        m = list(language_re.finditer(
-            lexer.text[max(0, match.start()-100):match.start()]))
-        if m:
-            lx = lexer._get_lexer(m[-1].group(1))
-        else:
-            m = list(do_re.finditer(
-                lexer.text[max(0, match.start()-25):match.start()]))
-            if m:
-                lx = lexer._get_lexer('plpgsql')
+    elif m := list(
+        language_re.finditer(
+            lexer.text[max(0, match.start() - 100) : match.start()]
+        )
+    ):
+        lx = lexer._get_lexer(m[-1].group(1))
+    elif m := list(
+        do_re.finditer(lexer.text[max(0, match.start() - 25) : match.start()])
+    ):
+        lx = lexer._get_lexer('plpgsql')
 
     # 1 = $, 2 = delimiter, 3 = $
     yield (match.start(1), String, match.group(1))
@@ -142,10 +142,9 @@ class PostgresBase:
                 return get_lexer_by_name(lx, **self.options)
             except ClassNotFound:
                 pass
-        else:
-            # TODO: better logging
-            # print >>sys.stderr, "language not found:", lang
-            return None
+        # TODO: better logging
+        # print >>sys.stderr, "language not found:", lang
+        return None
 
 
 class PostgresLexer(PostgresBase, RegexLexer):
@@ -788,10 +787,9 @@ class SqliteConsoleLexer(Lexer):
             line = match.group()
             prompt_match = sqlite_prompt_re.match(line)
             if prompt_match is not None:
-                insertions.append((len(curcode),
-                                   [(0, Generic.Prompt, line[:7])]))
-                insertions.append((len(curcode),
-                                   [(7, Whitespace, ' ')]))
+                insertions.extend(((len(curcode),
+                                   [(0, Generic.Prompt, line[:7])]), (len(curcode),
+                                   [(7, Whitespace, ' ')])))
                 curcode += line[8:]
             else:
                 if curcode:

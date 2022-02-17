@@ -141,14 +141,8 @@ def _rx_indent(level):
     tab_width = 8
     # Regex matching a given indentation {level}, assuming that indentation is
     # a multiple of {tab_width}. In other cases there might be problems.
-    if tab_width == 2:
-        space_repeat = '+'
-    else:
-        space_repeat = '{1,%d}' % (tab_width - 1)
-    if level == 1:
-        level_repeat = ''
-    else:
-        level_repeat = '{%s}' % level
+    space_repeat = '+' if tab_width == 2 else '{1,%d}' % (tab_width - 1)
+    level_repeat = '' if level == 1 else '{%s}' % level
     return r'(?:\t| %s\t| {%s})%s.*\n' % (space_repeat, tab_width, level_repeat)
 
 
@@ -333,6 +327,8 @@ class ApacheConfLexer(RegexLexer):
     }
 
 
+
+
 class SquidConfLexer(RegexLexer):
     """
     Lexer for `squid <http://www.squid-cache.org/>`_ configuration files.
@@ -446,12 +442,11 @@ class SquidConfLexer(RegexLexer):
             (r'#', Comment, 'comment'),
             (words(keywords, prefix=r'\b', suffix=r'\b'), Keyword),
             (words(opts, prefix=r'\b', suffix=r'\b'), Name.Constant),
-            # Actions
             (words(actions, prefix=r'\b', suffix=r'\b'), String),
             (words(actions_stats, prefix=r'stats/', suffix=r'\b'), String),
             (words(actions_log, prefix=r'log/', suffix=r'='), String),
             (words(acls, prefix=r'\b', suffix=r'\b'), Keyword),
-            (ip_re + r'(?:/(?:' + ip_re + r'|\b\d+\b))?', Number.Float),
+            (f'{ip_re}(?:/(?:{ip_re}|\\b\\d+\\b))?', Number.Float),
             (r'(?:\b\d+\b(?:-\b\d+|%)?)', Number),
             (r'\S+', Text),
         ],
@@ -461,6 +456,8 @@ class SquidConfLexer(RegexLexer):
             default('#pop'),
         ],
     }
+
+
 
 
 class NginxConfLexer(RegexLexer):
@@ -652,10 +649,7 @@ class TerraformLexer(ExtendedRegexLexer):
         line_re = re.compile('.*?\n')
 
         for match in line_re.finditer(ctx.text, ctx.pos):
-            if tolerant:
-                check = match.group().strip()
-            else:
-                check = match.group().rstrip()
+            check = match.group().strip() if tolerant else match.group().rstrip()
             if check == hdname:
                 for amatch in lines:
                     yield amatch.start(), String.Heredoc, amatch.group()

@@ -121,7 +121,7 @@ def _print_list(what):
 
         for name in get_all_filters():
             cls = find_filter_class(name)
-            print("* " + name + ':')
+            print(f'* {name}:')
             print("    %s" % docstring_headline(cls))
 
     elif what == 'style':
@@ -131,7 +131,7 @@ def _print_list(what):
 
         for name in get_all_styles():
             cls = get_style_by_name(name)
-            print("* " + name + ':')
+            print(f'* {name}:')
             print("    %s" % docstring_headline(cls))
 
 
@@ -139,13 +139,11 @@ def _print_list_as_json(requested_items):
     import json
     result = {}
     if 'lexer' in requested_items:
-        info = {}
-        for fullname, names, filenames, mimetypes in get_all_lexers():
-            info[fullname] = {
+        info = {fullname: {
                 'aliases': names,
                 'filenames': filenames,
                 'mimetypes': mimetypes
-            }
+            } for fullname, names, filenames, mimetypes in get_all_lexers()}
         result['lexers'] = info
 
     if 'formatter' in requested_items:

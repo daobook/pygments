@@ -104,8 +104,7 @@ class YamlLexer(ExtendedRegexLexer):
             context.block_scalar_indent = None
             if not text:
                 return
-            increment = match.group(1)
-            if increment:
+            if increment := match.group(1):
                 current_indent = max(context.indent, 0)
                 increment = int(increment)
                 context.block_scalar_indent = current_indent + increment
@@ -141,11 +140,10 @@ class YamlLexer(ExtendedRegexLexer):
                     context.stack.pop()
                     return
                 context.block_scalar_indent = len(text)
-            else:
-                if len(text) < context.block_scalar_indent:
-                    context.stack.pop()
-                    context.stack.pop()
-                    return
+            elif len(text) < context.block_scalar_indent:
+                context.stack.pop()
+                context.stack.pop()
+                return
             if text:
                 yield match.start(), token_class, text
                 context.pos = match.end()
